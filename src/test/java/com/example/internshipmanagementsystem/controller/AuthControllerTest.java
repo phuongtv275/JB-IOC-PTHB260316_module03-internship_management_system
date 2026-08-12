@@ -1,0 +1,44 @@
+package com.example.internshipmanagementsystem.controller;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import com.example.internshipmanagementsystem.dto.response.LoginResponse;
+import com.example.internshipmanagementsystem.security.JwtAuthenticationFilter;
+import com.example.internshipmanagementsystem.service.AuthService;
+import com.example.internshipmanagementsystem.service.UserService;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.web.servlet.MockMvc;
+
+@WebMvcTest(AuthController.class)
+@AutoConfigureMockMvc(addFilters = false)
+class AuthControllerTest {
+
+  @Autowired private MockMvc mockMvc;
+
+  @MockitoBean private AuthService authService;
+
+  @MockitoBean private UserService userService;
+
+  @MockitoBean private JwtAuthenticationFilter jwtAuthenticationFilter;
+
+  @Test
+  void shouldReturnToken_whenLoginRequestIsValid() throws Exception {
+    when(authService.login(any())).thenReturn(new LoginResponse("token", "Bearer"));
+
+    mockMvc
+        .perform(
+            post("/api/auth/login")
+                .contentType("application/json")
+                .content("{\"username\":\"admin\",\"password\":\"password\"}"))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data.accessToken").value("token"));
+  }
+}
