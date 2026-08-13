@@ -1,0 +1,142 @@
+{
+  "info": {
+    "_postman_id": "a55ab723-99d4-4c51-b979-2a3e4a84c2dd",
+    "name": "Internship Management System",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8080" },
+    { "key": "adminToken", "value": "" },
+    { "key": "mentorToken", "value": "" },
+    { "key": "studentToken", "value": "" },
+    { "key": "mentorId", "value": "" },
+    { "key": "studentId", "value": "" },
+    { "key": "phaseId", "value": "" },
+    { "key": "criterionId", "value": "" },
+    { "key": "roundId", "value": "" },
+    { "key": "assignmentId", "value": "" },
+    { "key": "resultId", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Happy path",
+      "item": [
+        {
+          "name": "01 - Login as default ADMIN",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/api/auth/login",
+            "body": { "mode": "raw", "raw": "{\n  \"username\": \"ADMIN\",\n  \"password\": \"admin\"\n}" }
+          },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.collectionVariables.set('adminToken', pm.response.json().data.accessToken);"] } }]
+        },
+        {
+          "name": "02 - Get seeded account IDs",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+            "url": "{{baseUrl}}/api/users"
+          },
+          "event": [{ "listen": "test", "script": { "exec": ["const users = pm.response.json().data;", "pm.collectionVariables.set('mentorId', users.find(user => user.username === 'MENTOR').userId);", "pm.collectionVariables.set('studentId', users.find(user => user.username === 'STUDENT').userId);"] } }]
+        },
+        {
+          "name": "03 - Create MENTOR profile",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/api/mentors",
+            "body": { "mode": "raw", "raw": "{\n  \"mentorId\": {{mentorId}},\n  \"department\": \"Computer Science\",\n  \"academicRank\": \"MSc\"\n}" }
+          }
+        },
+        {
+          "name": "04 - Create STUDENT profile",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/api/students",
+            "body": { "mode": "raw", "raw": "{\n  \"studentId\": {{studentId}},\n  \"studentCode\": \"DEMO-001\",\n  \"major\": \"Computer Science\",\n  \"className\": \"PTHB260316\",\n  \"dateOfBirth\": \"2004-01-01\",\n  \"address\": \"Hanoi\"\n}" }
+          }
+        },
+        {
+          "name": "05 - Create internship phase",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/api/internship_phases",
+            "body": { "mode": "raw", "raw": "{\n  \"phaseName\": \"Demo Internship 2026\",\n  \"startDate\": \"2026-09-01\",\n  \"endDate\": \"2026-12-31\",\n  \"description\": \"Postman happy-path scenario\"\n}" }
+          },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.collectionVariables.set('phaseId', pm.response.json().data.phaseId);"] } }]
+        },
+        {
+          "name": "06 - Create evaluation criterion",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/api/evaluation_criteria",
+            "body": { "mode": "raw", "raw": "{\n  \"criterionName\": \"Technical Skills - Demo\",\n  \"description\": \"Technical delivery\",\n  \"maxScore\": 10\n}" }
+          },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.collectionVariables.set('criterionId', pm.response.json().data.criterionId);"] } }]
+        },
+        {
+          "name": "07 - Create assessment round",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/api/assessment_rounds",
+            "body": { "mode": "raw", "raw": "{\n  \"phaseId\": {{phaseId}},\n  \"roundName\": \"Demo Final Review\",\n  \"startDate\": \"2026-12-01\",\n  \"endDate\": \"2026-12-31\",\n  \"description\": \"Final review\",\n  \"criteria\": [{ \"criterionId\": {{criterionId}}, \"weight\": 1 }]\n}" }
+          },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.collectionVariables.set('roundId', pm.response.json().data.roundId);"] } }]
+        },
+        {
+          "name": "08 - Create internship assignment",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/api/internship_assignments",
+            "body": { "mode": "raw", "raw": "{\n  \"studentId\": {{studentId}},\n  \"mentorId\": {{mentorId}},\n  \"phaseId\": {{phaseId}}\n}" }
+          },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.collectionVariables.set('assignmentId', pm.response.json().data.assignmentId);"] } }]
+        },
+        {
+          "name": "09 - Login as MENTOR",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/api/auth/login",
+            "body": { "mode": "raw", "raw": "{\n  \"username\": \"MENTOR\",\n  \"password\": \"mentor\"\n}" }
+          },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.collectionVariables.set('mentorToken', pm.response.json().data.accessToken);"] } }]
+        },
+        {
+          "name": "10 - Mentor creates assessment result",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{mentorToken}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/api/assessment_results",
+            "body": { "mode": "raw", "raw": "{\n  \"assignmentId\": {{assignmentId}},\n  \"roundId\": {{roundId}},\n  \"criterionId\": {{criterionId}},\n  \"score\": 8.5,\n  \"comments\": \"Demo result\"\n}" }
+          },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.collectionVariables.set('resultId', pm.response.json().data.resultId);"] } }]
+        },
+        {
+          "name": "11 - Login as STUDENT",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/api/auth/login",
+            "body": { "mode": "raw", "raw": "{\n  \"username\": \"STUDENT\",\n  \"password\": \"student\"\n}" }
+          },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.collectionVariables.set('studentToken', pm.response.json().data.accessToken);"] } }]
+        },
+        {
+          "name": "12 - Student reads own results",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{studentToken}}" }],
+            "url": "{{baseUrl}}/api/assessment_results"
+          }
+        }
+      ]
+    }
+  ]
+}
