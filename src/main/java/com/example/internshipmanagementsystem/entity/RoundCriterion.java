@@ -29,7 +29,7 @@ public class RoundCriterion {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "roundcriterionid")
-  private Long roundCriterionId;
+  private Integer roundCriterionId;
 
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
   @JoinColumn(name = "roundid")

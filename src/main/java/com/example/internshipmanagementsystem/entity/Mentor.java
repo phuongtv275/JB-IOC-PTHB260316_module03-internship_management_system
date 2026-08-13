@@ -21,7 +21,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Mentor {
 
-  @Id private Long mentorId;
+  @Id private Integer mentorId;
 
   @OneToOne(fetch = FetchType.LAZY, optional = false)
   @MapsId

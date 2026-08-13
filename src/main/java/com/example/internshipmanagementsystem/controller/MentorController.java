@@ -37,7 +37,7 @@ public class MentorController {
   @GetMapping("/{mentorId}")
   @PreAuthorize("hasAnyRole('ADMIN', 'MENTOR', 'STUDENT')")
   public ResponseEntity<ApiResponse<MentorResponse>> getMentor(
-      @PathVariable Long mentorId, @AuthenticationPrincipal UserDetails userDetails) {
+      @PathVariable Integer mentorId, @AuthenticationPrincipal UserDetails userDetails) {
     return ResponseEntity.ok(
         ApiResponse.success(
             200, "Mentor retrieved", mentorService.getMentor(mentorId, userDetails.getUsername())));
@@ -54,7 +54,7 @@ public class MentorController {
   @PutMapping("/{mentorId}")
   @PreAuthorize("hasAnyRole('ADMIN', 'MENTOR')")
   public ResponseEntity<ApiResponse<MentorResponse>> updateMentor(
-      @PathVariable Long mentorId,
+      @PathVariable Integer mentorId,
       @Valid @RequestBody MentorProfileRequest request,
       @AuthenticationPrincipal UserDetails userDetails) {
     return ResponseEntity.ok(

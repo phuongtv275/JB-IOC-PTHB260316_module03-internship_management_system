@@ -4,9 +4,9 @@ import com.example.internshipmanagementsystem.entity.RoundCriterion;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface RoundCriterionRepository extends JpaRepository<RoundCriterion, Long> {
+public interface RoundCriterionRepository extends JpaRepository<RoundCriterion, Integer> {
 
-  List<RoundCriterion> findByRoundRoundId(Long roundId);
+  List<RoundCriterion> findByRoundRoundId(Integer roundId);
 
-  boolean existsByRoundRoundIdAndCriterionCriterionId(Long roundId, Long criterionId);
+  boolean existsByRoundRoundIdAndCriterionCriterionId(Integer roundId, Integer criterionId);
 }

@@ -39,7 +39,7 @@ public class StudentController {
   @GetMapping("/{studentId}")
   @PreAuthorize("hasAnyRole('ADMIN', 'MENTOR', 'STUDENT')")
   public ResponseEntity<ApiResponse<StudentResponse>> getStudent(
-      @PathVariable Long studentId, @AuthenticationPrincipal UserDetails userDetails) {
+      @PathVariable Integer studentId, @AuthenticationPrincipal UserDetails userDetails) {
     return ResponseEntity.ok(
         ApiResponse.success(
             200,
@@ -58,7 +58,7 @@ public class StudentController {
   @PutMapping("/{studentId}")
   @PreAuthorize("hasAnyRole('ADMIN', 'STUDENT')")
   public ResponseEntity<ApiResponse<StudentResponse>> updateStudent(
-      @PathVariable Long studentId,
+      @PathVariable Integer studentId,
       @Valid @RequestBody StudentProfileRequest request,
       @AuthenticationPrincipal UserDetails userDetails) {
     return ResponseEntity.ok(

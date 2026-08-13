@@ -8,7 +8,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 public record AssessmentRoundRequest(
-    @NotNull Long phaseId,
+    @NotNull Integer phaseId,
     @NotBlank @Size(max = 100) String roundName,
     @NotNull LocalDate startDate,
     @NotNull LocalDate endDate,

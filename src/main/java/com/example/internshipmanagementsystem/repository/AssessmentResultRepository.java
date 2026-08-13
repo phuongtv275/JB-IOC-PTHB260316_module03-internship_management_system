@@ -4,12 +4,12 @@ import com.example.internshipmanagementsystem.entity.AssessmentResult;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface AssessmentResultRepository extends JpaRepository<AssessmentResult, Long> {
+public interface AssessmentResultRepository extends JpaRepository<AssessmentResult, Integer> {
 
-  boolean existsByRoundRoundId(Long roundId);
+  boolean existsByRoundRoundId(Integer roundId);
 
   boolean existsByAssignmentAssignmentIdAndRoundRoundIdAndCriterionCriterionId(
-      Long assignmentId, Long roundId, Long criterionId);
+      Integer assignmentId, Integer roundId, Integer criterionId);
 
   List<AssessmentResult> findByAssignmentMentorUserUsername(String username);
 

@@ -11,5 +11,5 @@ public interface AssessmentResultService {
   AssessmentResultResponse createResult(AssessmentResultRequest request, String actorUsername);
 
   AssessmentResultResponse updateResult(
-      Long resultId, AssessmentResultRequest request, String actorUsername);
+      Integer resultId, AssessmentResultRequest request, String actorUsername);
 }

@@ -4,11 +4,11 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public record AssessmentResultResponse(
-    Long resultId,
-    Long assignmentId,
-    Long roundId,
-    Long criterionId,
+    Integer resultId,
+    Integer assignmentId,
+    Integer roundId,
+    Integer criterionId,
     BigDecimal score,
     String comments,
-    Long evaluatedBy,
+    Integer evaluatedBy,
     LocalDateTime evaluationDate) {}

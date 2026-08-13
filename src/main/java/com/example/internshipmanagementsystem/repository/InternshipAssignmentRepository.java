@@ -4,9 +4,10 @@ import com.example.internshipmanagementsystem.entity.InternshipAssignment;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface InternshipAssignmentRepository extends JpaRepository<InternshipAssignment, Long> {
+public interface InternshipAssignmentRepository
+    extends JpaRepository<InternshipAssignment, Integer> {
 
-  boolean existsByStudentStudentIdAndPhasePhaseId(Long studentId, Long phaseId);
+  boolean existsByStudentStudentIdAndPhasePhaseId(Integer studentId, Integer phaseId);
 
   List<InternshipAssignment> findByMentorUserUsername(String username);
 

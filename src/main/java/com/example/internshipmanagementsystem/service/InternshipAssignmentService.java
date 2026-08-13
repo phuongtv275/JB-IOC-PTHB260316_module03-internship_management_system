@@ -9,9 +9,9 @@ public interface InternshipAssignmentService {
 
   List<InternshipAssignmentResponse> getAssignments(String actorUsername);
 
-  InternshipAssignmentResponse getAssignment(Long assignmentId, String actorUsername);
+  InternshipAssignmentResponse getAssignment(Integer assignmentId, String actorUsername);
 
   InternshipAssignmentResponse createAssignment(InternshipAssignmentRequest request);
 
-  InternshipAssignmentResponse updateStatus(Long assignmentId, AssignmentStatus status);
+  InternshipAssignmentResponse updateStatus(Integer assignmentId, AssignmentStatus status);
 }

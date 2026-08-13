@@ -6,13 +6,14 @@ import java.util.List;
 
 public interface RoundCriterionService {
 
-  List<RoundCriterionResponse> getRoundCriteria(Long roundId);
+  List<RoundCriterionResponse> getRoundCriteria(Integer roundId);
 
-  RoundCriterionResponse getRoundCriterion(Long roundCriterionId);
+  RoundCriterionResponse getRoundCriterion(Integer roundCriterionId);
 
   RoundCriterionResponse createRoundCriterion(RoundCriterionRequest request);
 
-  RoundCriterionResponse updateRoundCriterion(Long roundCriterionId, RoundCriterionRequest request);
+  RoundCriterionResponse updateRoundCriterion(
+      Integer roundCriterionId, RoundCriterionRequest request);
 
-  void deleteRoundCriterion(Long roundCriterionId);
+  void deleteRoundCriterion(Integer roundCriterionId);
 }

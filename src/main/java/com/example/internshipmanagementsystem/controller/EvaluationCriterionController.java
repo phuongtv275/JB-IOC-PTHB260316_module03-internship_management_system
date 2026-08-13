@@ -37,7 +37,7 @@ public class EvaluationCriterionController {
   @GetMapping("/{criterionId}")
   @PreAuthorize("hasAnyRole('ADMIN', 'MENTOR', 'STUDENT')")
   public ResponseEntity<ApiResponse<EvaluationCriterionResponse>> getCriterion(
-      @PathVariable Long criterionId) {
+      @PathVariable Integer criterionId) {
     return ResponseEntity.ok(
         ApiResponse.success(
             200,
@@ -60,7 +60,7 @@ public class EvaluationCriterionController {
   @PutMapping("/{criterionId}")
   @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<ApiResponse<EvaluationCriterionResponse>> updateCriterion(
-      @PathVariable Long criterionId, @Valid @RequestBody EvaluationCriterionRequest request) {
+      @PathVariable Integer criterionId, @Valid @RequestBody EvaluationCriterionRequest request) {
     return ResponseEntity.ok(
         ApiResponse.success(
             200,
@@ -70,7 +70,7 @@ public class EvaluationCriterionController {
 
   @DeleteMapping("/{criterionId}")
   @PreAuthorize("hasRole('ADMIN')")
-  public ResponseEntity<Void> deleteCriterion(@PathVariable Long criterionId) {
+  public ResponseEntity<Void> deleteCriterion(@PathVariable Integer criterionId) {
     evaluationCriterionService.deleteCriterion(criterionId);
     return ResponseEntity.noContent().build();
   }

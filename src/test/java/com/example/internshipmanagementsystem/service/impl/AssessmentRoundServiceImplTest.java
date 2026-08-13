@@ -29,11 +29,11 @@ class AssessmentRoundServiceImplTest {
     InternshipPhase currentPhase = Mockito.mock(InternshipPhase.class);
     InternshipPhase otherPhase = Mockito.mock(InternshipPhase.class);
     when(round.getPhase()).thenReturn(currentPhase);
-    when(currentPhase.getPhaseId()).thenReturn(1L);
-    when(otherPhase.getPhaseId()).thenReturn(2L);
-    when(roundRepository.findById(1L)).thenReturn(Optional.of(round));
-    when(phaseRepository.findById(2L)).thenReturn(Optional.of(otherPhase));
-    when(resultRepository.existsByRoundRoundId(1L)).thenReturn(true);
+    when(currentPhase.getPhaseId()).thenReturn(1);
+    when(otherPhase.getPhaseId()).thenReturn(2);
+    when(roundRepository.findById(1)).thenReturn(Optional.of(round));
+    when(phaseRepository.findById(2)).thenReturn(Optional.of(otherPhase));
+    when(resultRepository.existsByRoundRoundId(1)).thenReturn(true);
     AssessmentRoundServiceImpl service =
         new AssessmentRoundServiceImpl(
             roundRepository,
@@ -46,9 +46,9 @@ class AssessmentRoundServiceImplTest {
     assertThatThrownBy(
             () ->
                 service.updateRound(
-                    1L,
+                    1,
                     new AssessmentRoundRequest(
-                        2L,
+                        2,
                         "Round",
                         LocalDate.of(2026, 1, 1),
                         LocalDate.of(2026, 1, 2),

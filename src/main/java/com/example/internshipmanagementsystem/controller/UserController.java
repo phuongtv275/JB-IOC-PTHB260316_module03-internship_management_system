@@ -42,7 +42,7 @@ public class UserController {
   }
 
   @GetMapping("/{userId}")
-  public ResponseEntity<ApiResponse<UserResponse>> getUser(@PathVariable Long userId) {
+  public ResponseEntity<ApiResponse<UserResponse>> getUser(@PathVariable Integer userId) {
     return ResponseEntity.ok(
         ApiResponse.success(200, "User retrieved", userService.getUser(userId)));
   }
@@ -56,21 +56,21 @@ public class UserController {
 
   @PutMapping("/{userId}")
   public ResponseEntity<ApiResponse<UserResponse>> updateUser(
-      @PathVariable Long userId, @Valid @RequestBody UpdateUserRequest request) {
+      @PathVariable Integer userId, @Valid @RequestBody UpdateUserRequest request) {
     return ResponseEntity.ok(
         ApiResponse.success(200, "User updated", userService.updateUser(userId, request)));
   }
 
   @PutMapping("/{userId}/status")
   public ResponseEntity<ApiResponse<UserResponse>> changeStatus(
-      @PathVariable Long userId, @Valid @RequestBody ChangeStatusRequest request) {
+      @PathVariable Integer userId, @Valid @RequestBody ChangeStatusRequest request) {
     return ResponseEntity.ok(
         ApiResponse.success(200, "User status updated", userService.changeStatus(userId, request)));
   }
 
   @PutMapping("/{userId}/role")
   public ResponseEntity<ApiResponse<UserResponse>> changeRole(
-      @PathVariable Long userId,
+      @PathVariable Integer userId,
       @Valid @RequestBody ChangeRoleRequest request,
       @AuthenticationPrincipal UserDetails userDetails) {
     return ResponseEntity.ok(
@@ -81,7 +81,7 @@ public class UserController {
   }
 
   @DeleteMapping("/{userId}")
-  public ResponseEntity<Void> deleteUser(@PathVariable Long userId) {
+  public ResponseEntity<Void> deleteUser(@PathVariable Integer userId) {
     userService.deleteUser(userId);
     return ResponseEntity.noContent().build();
   }

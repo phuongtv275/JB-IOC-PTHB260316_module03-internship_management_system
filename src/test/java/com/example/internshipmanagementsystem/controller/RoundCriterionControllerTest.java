@@ -28,6 +28,6 @@ class RoundCriterionControllerTest {
         .perform(get("/api/round_criteria").queryParam("round_id", "9"))
         .andExpect(status().isOk());
 
-    verify(roundCriterionService).getRoundCriteria(9L);
+    verify(roundCriterionService).getRoundCriteria(9);
   }
 }

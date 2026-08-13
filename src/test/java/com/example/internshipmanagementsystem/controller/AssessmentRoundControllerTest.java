@@ -28,6 +28,6 @@ class AssessmentRoundControllerTest {
         .perform(get("/api/assessment_rounds").queryParam("phase_id", "7"))
         .andExpect(status().isOk());
 
-    verify(assessmentRoundService).getRounds(7L);
+    verify(assessmentRoundService).getRounds(7);
   }
 }

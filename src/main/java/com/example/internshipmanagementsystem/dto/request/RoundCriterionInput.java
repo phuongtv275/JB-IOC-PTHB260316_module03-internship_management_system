@@ -5,5 +5,5 @@ import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 public record RoundCriterionInput(
-    @NotNull Long criterionId,
+    @NotNull Integer criterionId,
     @NotNull @DecimalMin(value = "0", inclusive = false) BigDecimal weight) {}

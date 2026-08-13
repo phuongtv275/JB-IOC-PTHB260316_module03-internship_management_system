@@ -23,7 +23,7 @@ public class InternshipPhase {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "phaseid")
-  private Long phaseId;
+  private Integer phaseId;
 
   @Column(name = "phasename", nullable = false, unique = true, length = 100)
   private String phaseName;

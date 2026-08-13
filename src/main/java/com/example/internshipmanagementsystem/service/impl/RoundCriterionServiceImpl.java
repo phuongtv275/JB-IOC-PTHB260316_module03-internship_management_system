@@ -29,7 +29,7 @@ public class RoundCriterionServiceImpl implements RoundCriterionService {
   private final RoundCriterionMapper roundCriterionMapper;
 
   @Override
-  public List<RoundCriterionResponse> getRoundCriteria(Long roundId) {
+  public List<RoundCriterionResponse> getRoundCriteria(Integer roundId) {
     List<RoundCriterion> criteria =
         roundId == null
             ? roundCriterionRepository.findAll()
@@ -38,7 +38,7 @@ public class RoundCriterionServiceImpl implements RoundCriterionService {
   }
 
   @Override
-  public RoundCriterionResponse getRoundCriterion(Long roundCriterionId) {
+  public RoundCriterionResponse getRoundCriterion(Integer roundCriterionId) {
     return roundCriterionMapper.toResponse(findRoundCriterion(roundCriterionId));
   }
 
@@ -58,7 +58,7 @@ public class RoundCriterionServiceImpl implements RoundCriterionService {
   @Override
   @Transactional
   public RoundCriterionResponse updateRoundCriterion(
-      Long roundCriterionId, RoundCriterionRequest request) {
+      Integer roundCriterionId, RoundCriterionRequest request) {
     RoundCriterion roundCriterion = findRoundCriterion(roundCriterionId);
     if (!roundCriterion.getRound().getRoundId().equals(request.roundId())
         || !roundCriterion.getCriterion().getCriterionId().equals(request.criterionId())) {
@@ -70,23 +70,23 @@ public class RoundCriterionServiceImpl implements RoundCriterionService {
 
   @Override
   @Transactional
-  public void deleteRoundCriterion(Long roundCriterionId) {
+  public void deleteRoundCriterion(Integer roundCriterionId) {
     roundCriterionRepository.delete(findRoundCriterion(roundCriterionId));
   }
 
-  private RoundCriterion findRoundCriterion(Long roundCriterionId) {
+  private RoundCriterion findRoundCriterion(Integer roundCriterionId) {
     return roundCriterionRepository
         .findById(roundCriterionId)
         .orElseThrow(() -> new ResourceNotFoundException("Round criterion not found"));
   }
 
-  private AssessmentRound findRound(Long roundId) {
+  private AssessmentRound findRound(Integer roundId) {
     return assessmentRoundRepository
         .findById(roundId)
         .orElseThrow(() -> new ResourceNotFoundException("Assessment round not found"));
   }
 
-  private EvaluationCriterion findCriterion(Long criterionId) {
+  private EvaluationCriterion findCriterion(Integer criterionId) {
     return evaluationCriterionRepository
         .findById(criterionId)
         .orElseThrow(() -> new ResourceNotFoundException("Evaluation criterion not found"));

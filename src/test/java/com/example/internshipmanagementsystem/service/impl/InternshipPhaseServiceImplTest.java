@@ -52,9 +52,9 @@ class InternshipPhaseServiceImplTest {
     InternshipPhaseRequest request =
         new InternshipPhaseRequest(
             "Phase 2", LocalDate.of(2027, 1, 1), LocalDate.of(2027, 4, 30), null);
-    when(internshipPhaseRepository.findById(1L)).thenReturn(Optional.of(phase));
+    when(internshipPhaseRepository.findById(1)).thenReturn(Optional.of(phase));
 
-    assertThat(internshipPhaseService.updatePhase(1L, request).phaseName()).isEqualTo("Phase 2");
+    assertThat(internshipPhaseService.updatePhase(1, request).phaseName()).isEqualTo("Phase 2");
   }
 
   @Test
@@ -70,9 +70,9 @@ class InternshipPhaseServiceImplTest {
 
   @Test
   void shouldThrowException_whenPhaseDoesNotExist() {
-    when(internshipPhaseRepository.findById(1L)).thenReturn(Optional.empty());
+    when(internshipPhaseRepository.findById(1)).thenReturn(Optional.empty());
 
-    assertThatThrownBy(() -> internshipPhaseService.getPhase(1L))
+    assertThatThrownBy(() -> internshipPhaseService.getPhase(1))
         .isInstanceOf(ResourceNotFoundException.class);
   }
 
@@ -81,8 +81,8 @@ class InternshipPhaseServiceImplTest {
     InternshipPhase phase =
         InternshipPhase.create(
             "Phase 1", LocalDate.of(2026, 9, 1), LocalDate.of(2026, 12, 31), null);
-    when(internshipPhaseRepository.findById(1L)).thenReturn(Optional.of(phase));
+    when(internshipPhaseRepository.findById(1)).thenReturn(Optional.of(phase));
 
-    internshipPhaseService.deletePhase(1L);
+    internshipPhaseService.deletePhase(1);
   }
 }

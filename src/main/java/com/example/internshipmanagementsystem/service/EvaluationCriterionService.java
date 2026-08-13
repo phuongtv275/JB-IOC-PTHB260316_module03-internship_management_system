@@ -8,11 +8,12 @@ public interface EvaluationCriterionService {
 
   List<EvaluationCriterionResponse> getCriteria();
 
-  EvaluationCriterionResponse getCriterion(Long criterionId);
+  EvaluationCriterionResponse getCriterion(Integer criterionId);
 
   EvaluationCriterionResponse createCriterion(EvaluationCriterionRequest request);
 
-  EvaluationCriterionResponse updateCriterion(Long criterionId, EvaluationCriterionRequest request);
+  EvaluationCriterionResponse updateCriterion(
+      Integer criterionId, EvaluationCriterionRequest request);
 
-  void deleteCriterion(Long criterionId);
+  void deleteCriterion(Integer criterionId);
 }

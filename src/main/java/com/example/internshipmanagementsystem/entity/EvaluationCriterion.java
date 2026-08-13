@@ -23,7 +23,7 @@ public class EvaluationCriterion {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "criterionid")
-  private Long criterionId;
+  private Integer criterionId;
 
   @Column(name = "criterionname", nullable = false, unique = true, length = 200)
   private String criterionName;

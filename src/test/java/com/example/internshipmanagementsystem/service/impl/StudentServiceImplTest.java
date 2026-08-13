@@ -28,19 +28,19 @@ class StudentServiceImplTest {
         User.create("student", "hash", "Student", "student@example.com", null, Role.STUDENT);
     User target = User.create("other", "hash", "Other", "other@example.com", null, Role.STUDENT);
     Student student = Student.create(target, "SV002", null, null, null, null);
-    StudentProfileRequest request = new StudentProfileRequest(2L, "SV002", null, null, null, null);
+    StudentProfileRequest request = new StudentProfileRequest(2, "SV002", null, null, null, null);
     when(userRepository.findByUsername("student")).thenReturn(Optional.of(actor));
-    when(studentRepository.findById(2L)).thenReturn(Optional.of(student));
+    when(studentRepository.findById(2)).thenReturn(Optional.of(student));
 
-    assertThatThrownBy(() -> studentService.updateStudent(2L, request, "student"))
+    assertThatThrownBy(() -> studentService.updateStudent(2, request, "student"))
         .isInstanceOf(AccessDeniedBusinessException.class);
   }
 
   @Test
   void shouldThrowException_whenProfileUserDoesNotHaveStudentRole() {
     User user = User.create("mentor", "hash", "Mentor", "mentor@example.com", null, Role.MENTOR);
-    StudentProfileRequest request = new StudentProfileRequest(1L, "SV001", null, null, null, null);
-    when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+    StudentProfileRequest request = new StudentProfileRequest(1, "SV001", null, null, null, null);
+    when(userRepository.findById(1)).thenReturn(Optional.of(user));
 
     assertThatThrownBy(() -> studentService.createStudent(request))
         .isInstanceOf(AccessDeniedBusinessException.class);

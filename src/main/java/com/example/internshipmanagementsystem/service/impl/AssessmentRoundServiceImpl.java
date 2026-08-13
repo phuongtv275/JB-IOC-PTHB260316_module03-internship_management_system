@@ -39,7 +39,7 @@ public class AssessmentRoundServiceImpl implements AssessmentRoundService {
   private final AssessmentRoundMapper assessmentRoundMapper;
 
   @Override
-  public List<AssessmentRoundResponse> getRounds(Long phaseId) {
+  public List<AssessmentRoundResponse> getRounds(Integer phaseId) {
     List<AssessmentRound> rounds =
         phaseId == null
             ? assessmentRoundRepository.findAll()
@@ -48,7 +48,7 @@ public class AssessmentRoundServiceImpl implements AssessmentRoundService {
   }
 
   @Override
-  public AssessmentRoundResponse getRound(Long roundId) {
+  public AssessmentRoundResponse getRound(Integer roundId) {
     return assessmentRoundMapper.toResponse(findRound(roundId));
   }
 
@@ -70,7 +70,7 @@ public class AssessmentRoundServiceImpl implements AssessmentRoundService {
 
   @Override
   @Transactional
-  public AssessmentRoundResponse updateRound(Long roundId, AssessmentRoundRequest request) {
+  public AssessmentRoundResponse updateRound(Integer roundId, AssessmentRoundRequest request) {
     validateDates(request.startDate(), request.endDate());
     AssessmentRound round = findRound(roundId);
     if (!Objects.equals(round.getPhase().getPhaseId(), request.phaseId())
@@ -89,7 +89,7 @@ public class AssessmentRoundServiceImpl implements AssessmentRoundService {
 
   @Override
   @Transactional
-  public void deleteRound(Long roundId) {
+  public void deleteRound(Integer roundId) {
     assessmentRoundRepository.delete(findRound(roundId));
   }
 
@@ -97,7 +97,7 @@ public class AssessmentRoundServiceImpl implements AssessmentRoundService {
     if (criteria == null) {
       return;
     }
-    Set<Long> criterionIds = new HashSet<>();
+    Set<Integer> criterionIds = new HashSet<>();
     for (RoundCriterionInput input : criteria) {
       if (!criterionIds.add(input.criterionId())) {
         throw new DuplicateResourceException("Criterion is already in the assessment round");
@@ -107,19 +107,19 @@ public class AssessmentRoundServiceImpl implements AssessmentRoundService {
     }
   }
 
-  private AssessmentRound findRound(Long roundId) {
+  private AssessmentRound findRound(Integer roundId) {
     return assessmentRoundRepository
         .findById(roundId)
         .orElseThrow(() -> new ResourceNotFoundException("Assessment round not found"));
   }
 
-  private InternshipPhase findPhase(Long phaseId) {
+  private InternshipPhase findPhase(Integer phaseId) {
     return internshipPhaseRepository
         .findById(phaseId)
         .orElseThrow(() -> new ResourceNotFoundException("Internship phase not found"));
   }
 
-  private EvaluationCriterion findCriterion(Long criterionId) {
+  private EvaluationCriterion findCriterion(Integer criterionId) {
     return evaluationCriterionRepository
         .findById(criterionId)
         .orElseThrow(() -> new ResourceNotFoundException("Evaluation criterion not found"));

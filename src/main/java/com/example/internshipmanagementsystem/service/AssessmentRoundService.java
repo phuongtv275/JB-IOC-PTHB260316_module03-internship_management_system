@@ -6,13 +6,13 @@ import java.util.List;
 
 public interface AssessmentRoundService {
 
-  List<AssessmentRoundResponse> getRounds(Long phaseId);
+  List<AssessmentRoundResponse> getRounds(Integer phaseId);
 
-  AssessmentRoundResponse getRound(Long roundId);
+  AssessmentRoundResponse getRound(Integer roundId);
 
   AssessmentRoundResponse createRound(AssessmentRoundRequest request);
 
-  AssessmentRoundResponse updateRound(Long roundId, AssessmentRoundRequest request);
+  AssessmentRoundResponse updateRound(Integer roundId, AssessmentRoundRequest request);
 
-  void deleteRound(Long roundId);
+  void deleteRound(Integer roundId);
 }

@@ -4,9 +4,9 @@ import com.example.internshipmanagementsystem.entity.AssignmentStatus;
 import java.time.LocalDateTime;
 
 public record InternshipAssignmentResponse(
-    Long assignmentId,
-    Long studentId,
-    Long mentorId,
-    Long phaseId,
+    Integer assignmentId,
+    Integer studentId,
+    Integer mentorId,
+    Integer phaseId,
     LocalDateTime assignedDate,
     AssignmentStatus status) {}

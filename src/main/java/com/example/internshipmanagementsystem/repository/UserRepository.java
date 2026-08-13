@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface UserRepository extends JpaRepository<User, Integer> {
 
   Optional<User> findByUsername(String username);
 
@@ -16,7 +16,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
   boolean existsByEmail(String email);
 
-  boolean existsByUsernameAndUserIdNot(String username, Long userId);
+  boolean existsByUsernameAndUserIdNot(String username, Integer userId);
 
-  boolean existsByEmailAndUserIdNot(String email, Long userId);
+  boolean existsByEmailAndUserIdNot(String email, Integer userId);
 }

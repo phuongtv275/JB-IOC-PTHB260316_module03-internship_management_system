@@ -79,7 +79,7 @@ public class AssessmentResultServiceImpl implements AssessmentResultService {
   @Override
   @Transactional
   public AssessmentResultResponse updateResult(
-      Long resultId, AssessmentResultRequest request, String actorUsername) {
+      Integer resultId, AssessmentResultRequest request, String actorUsername) {
     User evaluator = findUser(actorUsername);
     requireMentor(evaluator);
     AssessmentResult result = findResult(resultId);
@@ -131,25 +131,25 @@ public class AssessmentResultServiceImpl implements AssessmentResultService {
     }
   }
 
-  private AssessmentResult findResult(Long resultId) {
+  private AssessmentResult findResult(Integer resultId) {
     return assessmentResultRepository
         .findById(resultId)
         .orElseThrow(() -> new ResourceNotFoundException("Assessment result not found"));
   }
 
-  private InternshipAssignment findAssignment(Long assignmentId) {
+  private InternshipAssignment findAssignment(Integer assignmentId) {
     return internshipAssignmentRepository
         .findById(assignmentId)
         .orElseThrow(() -> new ResourceNotFoundException("Internship assignment not found"));
   }
 
-  private AssessmentRound findRound(Long roundId) {
+  private AssessmentRound findRound(Integer roundId) {
     return assessmentRoundRepository
         .findById(roundId)
         .orElseThrow(() -> new ResourceNotFoundException("Assessment round not found"));
   }
 
-  private EvaluationCriterion findCriterion(Long criterionId) {
+  private EvaluationCriterion findCriterion(Integer criterionId) {
     return evaluationCriterionRepository
         .findById(criterionId)
         .orElseThrow(() -> new ResourceNotFoundException("Evaluation criterion not found"));

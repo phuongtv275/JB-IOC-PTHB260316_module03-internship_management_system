@@ -8,9 +8,9 @@ public interface MentorService {
 
   List<MentorResponse> getMentors();
 
-  MentorResponse getMentor(Long mentorId, String actorUsername);
+  MentorResponse getMentor(Integer mentorId, String actorUsername);
 
   MentorResponse createMentor(MentorProfileRequest request);
 
-  MentorResponse updateMentor(Long mentorId, MentorProfileRequest request, String actorUsername);
+  MentorResponse updateMentor(Integer mentorId, MentorProfileRequest request, String actorUsername);
 }

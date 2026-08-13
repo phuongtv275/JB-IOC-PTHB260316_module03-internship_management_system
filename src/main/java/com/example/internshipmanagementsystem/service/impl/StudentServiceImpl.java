@@ -36,7 +36,7 @@ public class StudentServiceImpl implements StudentService {
   }
 
   @Override
-  public StudentResponse getStudent(Long studentId, String actorUsername) {
+  public StudentResponse getStudent(Integer studentId, String actorUsername) {
     Student student = findStudent(studentId);
     assertStudentOwnsProfile(student, actorUsername);
     return studentMapper.toResponse(student);
@@ -65,7 +65,7 @@ public class StudentServiceImpl implements StudentService {
   @Override
   @Transactional
   public StudentResponse updateStudent(
-      Long studentId, StudentProfileRequest request, String actorUsername) {
+      Integer studentId, StudentProfileRequest request, String actorUsername) {
     Student student = findStudent(studentId);
     assertStudentOwnsProfile(student, actorUsername);
     if (studentRepository.existsByStudentCodeAndStudentIdNot(request.studentCode(), studentId)) {
@@ -80,13 +80,13 @@ public class StudentServiceImpl implements StudentService {
     return studentMapper.toResponse(student);
   }
 
-  private Student findStudent(Long studentId) {
+  private Student findStudent(Integer studentId) {
     return studentRepository
         .findById(studentId)
         .orElseThrow(() -> new ResourceNotFoundException("Student not found"));
   }
 
-  private User findUser(Long userId) {
+  private User findUser(Integer userId) {
     return userRepository
         .findById(userId)
         .orElseThrow(() -> new ResourceNotFoundException("User not found"));

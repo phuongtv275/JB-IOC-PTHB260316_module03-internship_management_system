@@ -28,9 +28,9 @@ class MentorServiceImplTest {
     User target = User.create("other", "hash", "Other", "other@example.com", null, Role.MENTOR);
     Mentor mentor = Mentor.create(target, null, null);
     when(userRepository.findByUsername("mentor")).thenReturn(Optional.of(actor));
-    when(mentorRepository.findById(2L)).thenReturn(Optional.of(mentor));
+    when(mentorRepository.findById(2)).thenReturn(Optional.of(mentor));
 
-    assertThatThrownBy(() -> mentorService.getMentor(2L, "mentor"))
+    assertThatThrownBy(() -> mentorService.getMentor(2, "mentor"))
         .isInstanceOf(AccessDeniedBusinessException.class);
   }
 
@@ -38,8 +38,8 @@ class MentorServiceImplTest {
   void shouldThrowException_whenProfileUserDoesNotHaveMentorRole() {
     User user =
         User.create("student", "hash", "Student", "student@example.com", null, Role.STUDENT);
-    MentorProfileRequest request = new MentorProfileRequest(1L, null, null);
-    when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+    MentorProfileRequest request = new MentorProfileRequest(1, null, null);
+    when(userRepository.findById(1)).thenReturn(Optional.of(user));
 
     assertThatThrownBy(() -> mentorService.createMentor(request))
         .isInstanceOf(AccessDeniedBusinessException.class);

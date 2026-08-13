@@ -54,7 +54,7 @@ public class AssessmentResultController {
   @PutMapping("/{resultId}")
   @PreAuthorize("hasRole('MENTOR')")
   public ResponseEntity<ApiResponse<AssessmentResultResponse>> updateResult(
-      @PathVariable Long resultId,
+      @PathVariable Integer resultId,
       @Valid @RequestBody AssessmentResultRequest request,
       @AuthenticationPrincipal UserDetails userDetails) {
     return ResponseEntity.ok(

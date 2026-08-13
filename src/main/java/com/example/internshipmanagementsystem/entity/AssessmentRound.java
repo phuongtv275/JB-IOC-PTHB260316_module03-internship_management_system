@@ -26,7 +26,7 @@ public class AssessmentRound {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "roundid")
-  private Long roundId;
+  private Integer roundId;
 
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
   @JoinColumn(name = "phaseid")

@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 
 public record StudentProfileRequest(
-    @NotNull Long studentId,
+    @NotNull Integer studentId,
     @NotBlank @Size(max = 20) String studentCode,
     @Size(max = 100) String major,
     @Size(max = 50) String className,

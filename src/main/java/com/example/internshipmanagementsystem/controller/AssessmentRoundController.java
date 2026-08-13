@@ -30,7 +30,7 @@ public class AssessmentRoundController {
   @GetMapping
   @PreAuthorize("hasAnyRole('ADMIN', 'MENTOR', 'STUDENT')")
   public ResponseEntity<ApiResponse<List<AssessmentRoundResponse>>> getRounds(
-      @RequestParam(name = "phase_id", required = false) Long phaseId) {
+      @RequestParam(name = "phase_id", required = false) Integer phaseId) {
     return ResponseEntity.ok(
         ApiResponse.success(
             200, "Assessment rounds retrieved", assessmentRoundService.getRounds(phaseId)));
@@ -38,7 +38,8 @@ public class AssessmentRoundController {
 
   @GetMapping("/{roundId}")
   @PreAuthorize("hasAnyRole('ADMIN', 'MENTOR', 'STUDENT')")
-  public ResponseEntity<ApiResponse<AssessmentRoundResponse>> getRound(@PathVariable Long roundId) {
+  public ResponseEntity<ApiResponse<AssessmentRoundResponse>> getRound(
+      @PathVariable Integer roundId) {
     return ResponseEntity.ok(
         ApiResponse.success(
             200, "Assessment round retrieved", assessmentRoundService.getRound(roundId)));
@@ -57,7 +58,7 @@ public class AssessmentRoundController {
   @PutMapping("/{roundId}")
   @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<ApiResponse<AssessmentRoundResponse>> updateRound(
-      @PathVariable Long roundId, @Valid @RequestBody AssessmentRoundRequest request) {
+      @PathVariable Integer roundId, @Valid @RequestBody AssessmentRoundRequest request) {
     return ResponseEntity.ok(
         ApiResponse.success(
             200, "Assessment round updated", assessmentRoundService.updateRound(roundId, request)));
@@ -65,7 +66,7 @@ public class AssessmentRoundController {
 
   @DeleteMapping("/{roundId}")
   @PreAuthorize("hasRole('ADMIN')")
-  public ResponseEntity<Void> deleteRound(@PathVariable Long roundId) {
+  public ResponseEntity<Void> deleteRound(@PathVariable Integer roundId) {
     assessmentRoundService.deleteRound(roundId);
     return ResponseEntity.noContent().build();
   }

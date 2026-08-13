@@ -35,7 +35,7 @@ class InternshipPhaseControllerTest {
     when(internshipPhaseService.createPhase(any()))
         .thenReturn(
             new InternshipPhaseResponse(
-                1L, "Phase 1", LocalDate.of(2026, 9, 1), LocalDate.of(2026, 12, 31), null));
+                1, "Phase 1", LocalDate.of(2026, 9, 1), LocalDate.of(2026, 12, 31), null));
 
     mockMvc
         .perform(
@@ -75,24 +75,24 @@ class InternshipPhaseControllerTest {
   void shouldReadUpdateAndDeletePhase_whenRequestsAreValid() throws Exception {
     InternshipPhaseResponse response =
         new InternshipPhaseResponse(
-            1L, "Phase 1", LocalDate.of(2026, 9, 1), LocalDate.of(2026, 12, 31), null);
-    when(internshipPhaseService.getPhase(1L)).thenReturn(response);
-    when(internshipPhaseService.updatePhase(org.mockito.ArgumentMatchers.eq(1L), any()))
+            1, "Phase 1", LocalDate.of(2026, 9, 1), LocalDate.of(2026, 12, 31), null);
+    when(internshipPhaseService.getPhase(1)).thenReturn(response);
+    when(internshipPhaseService.updatePhase(org.mockito.ArgumentMatchers.eq(1), any()))
         .thenReturn(response);
 
     mockMvc
-        .perform(get("/api/internship_phases/{phaseId}", 1L))
+        .perform(get("/api/internship_phases/{phaseId}", 1))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.data.phaseId").value(1));
     mockMvc
         .perform(
-            put("/api/internship_phases/{phaseId}", 1L)
+            put("/api/internship_phases/{phaseId}", 1)
                 .contentType("application/json")
                 .content(
                     "{\"phaseName\":\"Phase 1\",\"startDate\":\"2026-09-01\",\"endDate\":\"2026-12-31\"}"))
         .andExpect(status().isOk());
     mockMvc
-        .perform(delete("/api/internship_phases/{phaseId}", 1L))
+        .perform(delete("/api/internship_phases/{phaseId}", 1))
         .andExpect(status().isNoContent());
   }
 }

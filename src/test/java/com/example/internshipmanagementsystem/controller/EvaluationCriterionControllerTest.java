@@ -33,7 +33,7 @@ class EvaluationCriterionControllerTest {
   void shouldCreateCriterion_whenRequestIsValid() throws Exception {
     when(evaluationCriterionService.createCriterion(any()))
         .thenReturn(
-            new EvaluationCriterionResponse(1L, "Communication", null, new BigDecimal("10.00")));
+            new EvaluationCriterionResponse(1, "Communication", null, new BigDecimal("10.00")));
 
     mockMvc
         .perform(
@@ -58,23 +58,23 @@ class EvaluationCriterionControllerTest {
   @Test
   void shouldReadUpdateAndDeleteCriterion_whenRequestsAreValid() throws Exception {
     EvaluationCriterionResponse response =
-        new EvaluationCriterionResponse(1L, "Communication", null, new BigDecimal("10.00"));
-    when(evaluationCriterionService.getCriterion(1L)).thenReturn(response);
-    when(evaluationCriterionService.updateCriterion(org.mockito.ArgumentMatchers.eq(1L), any()))
+        new EvaluationCriterionResponse(1, "Communication", null, new BigDecimal("10.00"));
+    when(evaluationCriterionService.getCriterion(1)).thenReturn(response);
+    when(evaluationCriterionService.updateCriterion(org.mockito.ArgumentMatchers.eq(1), any()))
         .thenReturn(response);
 
     mockMvc
-        .perform(get("/api/evaluation_criteria/{criterionId}", 1L))
+        .perform(get("/api/evaluation_criteria/{criterionId}", 1))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.data.criterionId").value(1));
     mockMvc
         .perform(
-            put("/api/evaluation_criteria/{criterionId}", 1L)
+            put("/api/evaluation_criteria/{criterionId}", 1)
                 .contentType("application/json")
                 .content("{\"criterionName\":\"Communication\",\"maxScore\":10}"))
         .andExpect(status().isOk());
     mockMvc
-        .perform(delete("/api/evaluation_criteria/{criterionId}", 1L))
+        .perform(delete("/api/evaluation_criteria/{criterionId}", 1))
         .andExpect(status().isNoContent());
   }
 }

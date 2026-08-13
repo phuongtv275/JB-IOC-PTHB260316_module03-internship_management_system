@@ -31,7 +31,7 @@ class MentorControllerTest {
   void shouldCreateMentor_whenRequestIsValid() throws Exception {
     when(mentorService.createMentor(any()))
         .thenReturn(
-            new MentorResponse(1L, "Engineering", null, LocalDateTime.now(), LocalDateTime.now()));
+            new MentorResponse(1, "Engineering", null, LocalDateTime.now(), LocalDateTime.now()));
 
     mockMvc
         .perform(

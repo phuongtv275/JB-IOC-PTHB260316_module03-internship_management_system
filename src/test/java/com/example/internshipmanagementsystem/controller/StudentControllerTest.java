@@ -32,7 +32,7 @@ class StudentControllerTest {
     when(studentService.createStudent(any()))
         .thenReturn(
             new StudentResponse(
-                1L, "SV001", null, null, null, null, LocalDateTime.now(), LocalDateTime.now()));
+                1, "SV001", null, null, null, null, LocalDateTime.now(), LocalDateTime.now()));
 
     mockMvc
         .perform(

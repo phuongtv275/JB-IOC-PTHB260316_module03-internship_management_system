@@ -8,10 +8,10 @@ public interface StudentService {
 
   List<StudentResponse> getStudents(String actorUsername);
 
-  StudentResponse getStudent(Long studentId, String actorUsername);
+  StudentResponse getStudent(Integer studentId, String actorUsername);
 
   StudentResponse createStudent(StudentProfileRequest request);
 
   StudentResponse updateStudent(
-      Long studentId, StudentProfileRequest request, String actorUsername);
+      Integer studentId, StudentProfileRequest request, String actorUsername);
 }

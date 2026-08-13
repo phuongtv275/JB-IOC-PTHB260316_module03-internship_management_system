@@ -33,7 +33,7 @@ class UserControllerTest {
   void shouldReturnUsers_whenRequestedByAdmin() throws Exception {
     UserResponse user =
         new UserResponse(
-            1L,
+            1,
             "student",
             "Student",
             "student@example.com",

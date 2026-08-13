@@ -30,7 +30,7 @@ public class InternshipAssignment {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "assignmentid")
-  private Long assignmentId;
+  private Integer assignmentId;
 
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
   @JoinColumn(name = "studentid")

@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public record StudentResponse(
-    Long studentId,
+    Integer studentId,
     String studentCode,
     String major,
     String className,

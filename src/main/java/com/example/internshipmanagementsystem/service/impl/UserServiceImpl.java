@@ -39,7 +39,7 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public UserResponse getUser(Long userId) {
+  public UserResponse getUser(Integer userId) {
     return userMapper.toResponse(findUser(userId));
   }
 
@@ -65,7 +65,7 @@ public class UserServiceImpl implements UserService {
 
   @Override
   @Transactional
-  public UserResponse updateUser(Long userId, UpdateUserRequest request) {
+  public UserResponse updateUser(Integer userId, UpdateUserRequest request) {
     User user = findUser(userId);
     validateUpdatedIdentity(userId, request.username(), request.email());
     user.update(
@@ -79,7 +79,7 @@ public class UserServiceImpl implements UserService {
 
   @Override
   @Transactional
-  public UserResponse changeStatus(Long userId, ChangeStatusRequest request) {
+  public UserResponse changeStatus(Integer userId, ChangeStatusRequest request) {
     User user = findUser(userId);
     user.changeActiveStatus(request.isActive());
     return userMapper.toResponse(user);
@@ -87,7 +87,7 @@ public class UserServiceImpl implements UserService {
 
   @Override
   @Transactional
-  public UserResponse changeRole(Long userId, ChangeRoleRequest request, String actorUsername) {
+  public UserResponse changeRole(Integer userId, ChangeRoleRequest request, String actorUsername) {
     User target = findUser(userId);
     if (target.getRole() == Role.ADMIN && !target.getUsername().equals(actorUsername)) {
       throw new AccessDeniedBusinessException(
@@ -100,11 +100,11 @@ public class UserServiceImpl implements UserService {
 
   @Override
   @Transactional
-  public void deleteUser(Long userId) {
+  public void deleteUser(Integer userId) {
     userRepository.delete(findUser(userId));
   }
 
-  private User findUser(Long userId) {
+  private User findUser(Integer userId) {
     return userRepository
         .findById(userId)
         .orElseThrow(() -> new ResourceNotFoundException("User not found"));
@@ -122,7 +122,7 @@ public class UserServiceImpl implements UserService {
     }
   }
 
-  private void validateUpdatedIdentity(Long userId, String username, String email) {
+  private void validateUpdatedIdentity(Integer userId, String username, String email) {
     if (userRepository.existsByUsernameAndUserIdNot(username, userId)
         || userRepository.existsByEmailAndUserIdNot(email, userId)) {
       throw new DuplicateResourceException("Username or email already exists");

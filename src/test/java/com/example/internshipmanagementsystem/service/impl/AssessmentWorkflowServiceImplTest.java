@@ -40,9 +40,9 @@ class AssessmentWorkflowServiceImplTest {
     EvaluationCriterionRepository criterionRepository =
         Mockito.mock(EvaluationCriterionRepository.class);
     UserRepository userRepository = Mockito.mock(UserRepository.class);
-    when(assignmentRepository.findById(1L)).thenReturn(Optional.of(assignment));
-    when(roundRepository.findById(1L)).thenReturn(Optional.of(round));
-    when(criterionRepository.findById(1L)).thenReturn(Optional.of(criterion));
+    when(assignmentRepository.findById(1)).thenReturn(Optional.of(assignment));
+    when(roundRepository.findById(1)).thenReturn(Optional.of(round));
+    when(criterionRepository.findById(1)).thenReturn(Optional.of(criterion));
     when(userRepository.findByUsername("mentor")).thenReturn(Optional.of(mentorUser));
     AssessmentResultServiceImpl service =
         new AssessmentResultServiceImpl(
@@ -57,8 +57,7 @@ class AssessmentWorkflowServiceImplTest {
     assertThatThrownBy(
             () ->
                 service.createResult(
-                    new AssessmentResultRequest(1L, 1L, 1L, BigDecimal.valueOf(11), null),
-                    "mentor"))
+                    new AssessmentResultRequest(1, 1, 1, BigDecimal.valueOf(11), null), "mentor"))
         .isInstanceOf(InvalidAssessmentResultException.class);
   }
 
@@ -70,7 +69,7 @@ class AssessmentWorkflowServiceImplTest {
         Mockito.mock(InternshipAssignmentRepository.class);
     UserRepository userRepository = Mockito.mock(UserRepository.class);
     User other = TestAssessmentData.mentorUser("other");
-    when(assignmentRepository.findById(1L)).thenReturn(Optional.of(assignment));
+    when(assignmentRepository.findById(1)).thenReturn(Optional.of(assignment));
     when(userRepository.findByUsername("other")).thenReturn(Optional.of(other));
     AssessmentResultServiceImpl service =
         new AssessmentResultServiceImpl(
@@ -86,7 +85,7 @@ class AssessmentWorkflowServiceImplTest {
     assertThatThrownBy(
             () ->
                 service.createResult(
-                    new AssessmentResultRequest(1L, 1L, 1L, BigDecimal.ONE, null), "other"))
+                    new AssessmentResultRequest(1, 1, 1, BigDecimal.ONE, null), "other"))
         .isInstanceOf(AccessDeniedBusinessException.class);
   }
 
@@ -101,19 +100,19 @@ class AssessmentWorkflowServiceImplTest {
     com.example.internshipmanagementsystem.entity.AssessmentResult result =
         Mockito.mock(com.example.internshipmanagementsystem.entity.AssessmentResult.class);
     AssessmentResultRepository resultRepository = Mockito.mock(AssessmentResultRepository.class);
-    when(assignmentPhase.getPhaseId()).thenReturn(1L);
-    when(roundPhase.getPhaseId()).thenReturn(2L);
-    when(assignment.getAssignmentId()).thenReturn(1L);
+    when(assignmentPhase.getPhaseId()).thenReturn(1);
+    when(roundPhase.getPhaseId()).thenReturn(2);
+    when(assignment.getAssignmentId()).thenReturn(1);
     when(assignment.getPhase()).thenReturn(assignmentPhase);
     when(assignment.getMentor()).thenReturn(Mentor.create(mentor, null, null));
-    when(round.getRoundId()).thenReturn(1L);
+    when(round.getRoundId()).thenReturn(1);
     when(round.getPhase()).thenReturn(roundPhase);
-    when(criterion.getCriterionId()).thenReturn(1L);
+    when(criterion.getCriterionId()).thenReturn(1);
     when(criterion.getMaxScore()).thenReturn(BigDecimal.TEN);
     when(result.getAssignment()).thenReturn(assignment);
     when(result.getRound()).thenReturn(round);
     when(result.getCriterion()).thenReturn(criterion);
-    when(resultRepository.findById(1L)).thenReturn(Optional.of(result));
+    when(resultRepository.findById(1)).thenReturn(Optional.of(result));
     UserRepository userRepository = Mockito.mock(UserRepository.class);
     when(userRepository.findByUsername("mentor")).thenReturn(Optional.of(mentor));
     AssessmentResultServiceImpl service =
@@ -130,7 +129,7 @@ class AssessmentWorkflowServiceImplTest {
     assertThatThrownBy(
             () ->
                 service.updateResult(
-                    1L, new AssessmentResultRequest(1L, 1L, 1L, BigDecimal.ONE, null), "mentor"))
+                    1, new AssessmentResultRequest(1, 1, 1, BigDecimal.ONE, null), "mentor"))
         .isInstanceOf(InvalidAssessmentResultException.class);
   }
 
@@ -141,7 +140,7 @@ class AssessmentWorkflowServiceImplTest {
       User user = Mockito.mock(User.class);
       when(user.getUsername()).thenReturn(username);
       when(user.getRole()).thenReturn(com.example.internshipmanagementsystem.entity.Role.MENTOR);
-      when(user.getUserId()).thenReturn((long) username.hashCode());
+      when(user.getUserId()).thenReturn(username.hashCode());
       return user;
     }
 

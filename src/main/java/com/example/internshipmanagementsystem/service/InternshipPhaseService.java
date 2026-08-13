@@ -8,11 +8,11 @@ public interface InternshipPhaseService {
 
   List<InternshipPhaseResponse> getPhases();
 
-  InternshipPhaseResponse getPhase(Long phaseId);
+  InternshipPhaseResponse getPhase(Integer phaseId);
 
   InternshipPhaseResponse createPhase(InternshipPhaseRequest request);
 
-  InternshipPhaseResponse updatePhase(Long phaseId, InternshipPhaseRequest request);
+  InternshipPhaseResponse updatePhase(Integer phaseId, InternshipPhaseRequest request);
 
-  void deletePhase(Long phaseId);
+  void deletePhase(Integer phaseId);
 }

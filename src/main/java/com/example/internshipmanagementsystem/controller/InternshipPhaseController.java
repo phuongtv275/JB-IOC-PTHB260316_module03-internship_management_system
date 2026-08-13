@@ -36,7 +36,8 @@ public class InternshipPhaseController {
 
   @GetMapping("/{phaseId}")
   @PreAuthorize("hasAnyRole('ADMIN', 'MENTOR', 'STUDENT')")
-  public ResponseEntity<ApiResponse<InternshipPhaseResponse>> getPhase(@PathVariable Long phaseId) {
+  public ResponseEntity<ApiResponse<InternshipPhaseResponse>> getPhase(
+      @PathVariable Integer phaseId) {
     return ResponseEntity.ok(
         ApiResponse.success(
             200, "Internship phase retrieved", internshipPhaseService.getPhase(phaseId)));
@@ -55,7 +56,7 @@ public class InternshipPhaseController {
   @PutMapping("/{phaseId}")
   @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<ApiResponse<InternshipPhaseResponse>> updatePhase(
-      @PathVariable Long phaseId, @Valid @RequestBody InternshipPhaseRequest request) {
+      @PathVariable Integer phaseId, @Valid @RequestBody InternshipPhaseRequest request) {
     return ResponseEntity.ok(
         ApiResponse.success(
             200, "Internship phase updated", internshipPhaseService.updatePhase(phaseId, request)));
@@ -63,7 +64,7 @@ public class InternshipPhaseController {
 
   @DeleteMapping("/{phaseId}")
   @PreAuthorize("hasRole('ADMIN')")
-  public ResponseEntity<Void> deletePhase(@PathVariable Long phaseId) {
+  public ResponseEntity<Void> deletePhase(@PathVariable Integer phaseId) {
     internshipPhaseService.deletePhase(phaseId);
     return ResponseEntity.noContent().build();
   }

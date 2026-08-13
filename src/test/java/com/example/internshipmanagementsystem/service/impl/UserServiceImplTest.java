@@ -65,10 +65,10 @@ class UserServiceImplTest {
     User target =
         User.create("other-admin", "hash", "Other Admin", "other@example.com", null, Role.ADMIN);
     when(userRepository.findByUsername("admin")).thenReturn(Optional.of(actor));
-    when(userRepository.findById(2L)).thenReturn(Optional.of(target));
+    when(userRepository.findById(2)).thenReturn(Optional.of(target));
 
     assertThatThrownBy(
-            () -> userService.changeRole(2L, new ChangeRoleRequest(Role.STUDENT), "admin"))
+            () -> userService.changeRole(2, new ChangeRoleRequest(Role.STUDENT), "admin"))
         .isInstanceOf(AccessDeniedBusinessException.class);
   }
 
@@ -78,12 +78,12 @@ class UserServiceImplTest {
     UpdateUserRequest request =
         new UpdateUserRequest(
             "admin", "new-password", "Updated Admin", "updated@example.com", "0123456789");
-    when(userRepository.findById(1L)).thenReturn(Optional.of(user));
-    when(userRepository.existsByUsernameAndUserIdNot("admin", 1L)).thenReturn(false);
-    when(userRepository.existsByEmailAndUserIdNot("updated@example.com", 1L)).thenReturn(false);
+    when(userRepository.findById(1)).thenReturn(Optional.of(user));
+    when(userRepository.existsByUsernameAndUserIdNot("admin", 1)).thenReturn(false);
+    when(userRepository.existsByEmailAndUserIdNot("updated@example.com", 1)).thenReturn(false);
     when(passwordEncoder.encode("new-password")).thenReturn("new-hash");
 
-    UserResponse response = userService.updateUser(1L, request);
+    UserResponse response = userService.updateUser(1, request);
 
     org.assertj.core.api.Assertions.assertThat(response.role()).isEqualTo(Role.ADMIN);
   }
@@ -92,24 +92,23 @@ class UserServiceImplTest {
   void shouldThrowException_whenStudentWithProfileChangesToAnotherRole() {
     User student =
         User.create("student", "hash", "Student", "student@example.com", null, Role.STUDENT);
-    ReflectionTestUtils.setField(student, "userId", 1L);
-    when(userRepository.findById(1L)).thenReturn(Optional.of(student));
-    when(studentRepository.existsById(1L)).thenReturn(true);
+    ReflectionTestUtils.setField(student, "userId", 1);
+    when(userRepository.findById(1)).thenReturn(Optional.of(student));
+    when(studentRepository.existsById(1)).thenReturn(true);
 
-    assertThatThrownBy(
-            () -> userService.changeRole(1L, new ChangeRoleRequest(Role.MENTOR), "admin"))
+    assertThatThrownBy(() -> userService.changeRole(1, new ChangeRoleRequest(Role.MENTOR), "admin"))
         .isInstanceOf(AccessDeniedBusinessException.class);
   }
 
   @Test
   void shouldThrowException_whenMentorWithProfileChangesToAnotherRole() {
     User mentor = User.create("mentor", "hash", "Mentor", "mentor@example.com", null, Role.MENTOR);
-    ReflectionTestUtils.setField(mentor, "userId", 1L);
-    when(userRepository.findById(1L)).thenReturn(Optional.of(mentor));
-    when(mentorRepository.existsById(1L)).thenReturn(true);
+    ReflectionTestUtils.setField(mentor, "userId", 1);
+    when(userRepository.findById(1)).thenReturn(Optional.of(mentor));
+    when(mentorRepository.existsById(1)).thenReturn(true);
 
     assertThatThrownBy(
-            () -> userService.changeRole(1L, new ChangeRoleRequest(Role.STUDENT), "admin"))
+            () -> userService.changeRole(1, new ChangeRoleRequest(Role.STUDENT), "admin"))
         .isInstanceOf(AccessDeniedBusinessException.class);
   }
 }

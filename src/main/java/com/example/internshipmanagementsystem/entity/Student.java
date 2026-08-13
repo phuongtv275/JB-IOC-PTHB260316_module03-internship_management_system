@@ -22,7 +22,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Student {
 
-  @Id private Long studentId;
+  @Id private Integer studentId;
 
   @OneToOne(fetch = FetchType.LAZY, optional = false)
   @MapsId

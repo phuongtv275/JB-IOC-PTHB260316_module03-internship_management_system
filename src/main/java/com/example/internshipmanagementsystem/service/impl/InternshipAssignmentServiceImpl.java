@@ -49,7 +49,7 @@ public class InternshipAssignmentServiceImpl implements InternshipAssignmentServ
   }
 
   @Override
-  public InternshipAssignmentResponse getAssignment(Long assignmentId, String actorUsername) {
+  public InternshipAssignmentResponse getAssignment(Integer assignmentId, String actorUsername) {
     InternshipAssignment assignment = findAssignment(assignmentId);
     assertCanAccess(assignment, findUser(actorUsername));
     return internshipAssignmentMapper.toResponse(assignment);
@@ -72,31 +72,31 @@ public class InternshipAssignmentServiceImpl implements InternshipAssignmentServ
 
   @Override
   @Transactional
-  public InternshipAssignmentResponse updateStatus(Long assignmentId, AssignmentStatus status) {
+  public InternshipAssignmentResponse updateStatus(Integer assignmentId, AssignmentStatus status) {
     InternshipAssignment assignment = findAssignment(assignmentId);
     assignment.changeStatus(status);
     return internshipAssignmentMapper.toResponse(assignment);
   }
 
-  private InternshipAssignment findAssignment(Long assignmentId) {
+  private InternshipAssignment findAssignment(Integer assignmentId) {
     return internshipAssignmentRepository
         .findById(assignmentId)
         .orElseThrow(() -> new ResourceNotFoundException("Internship assignment not found"));
   }
 
-  private Student findStudent(Long studentId) {
+  private Student findStudent(Integer studentId) {
     return studentRepository
         .findById(studentId)
         .orElseThrow(() -> new ResourceNotFoundException("Student not found"));
   }
 
-  private Mentor findMentor(Long mentorId) {
+  private Mentor findMentor(Integer mentorId) {
     return mentorRepository
         .findById(mentorId)
         .orElseThrow(() -> new ResourceNotFoundException("Mentor not found"));
   }
 
-  private InternshipPhase findPhase(Long phaseId) {
+  private InternshipPhase findPhase(Integer phaseId) {
     return internshipPhaseRepository
         .findById(phaseId)
         .orElseThrow(() -> new ResourceNotFoundException("Internship phase not found"));

@@ -42,7 +42,7 @@ public class InternshipAssignmentController {
   @GetMapping("/{assignmentId}")
   @PreAuthorize("hasAnyRole('ADMIN', 'MENTOR', 'STUDENT')")
   public ResponseEntity<ApiResponse<InternshipAssignmentResponse>> getAssignment(
-      @PathVariable Long assignmentId, @AuthenticationPrincipal UserDetails userDetails) {
+      @PathVariable Integer assignmentId, @AuthenticationPrincipal UserDetails userDetails) {
     return ResponseEntity.ok(
         ApiResponse.success(
             200,
@@ -65,7 +65,7 @@ public class InternshipAssignmentController {
   @PutMapping("/{assignmentId}/status")
   @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<ApiResponse<InternshipAssignmentResponse>> updateStatus(
-      @PathVariable Long assignmentId, @Valid @RequestBody AssignmentStatusRequest request) {
+      @PathVariable Integer assignmentId, @Valid @RequestBody AssignmentStatusRequest request) {
     return ResponseEntity.ok(
         ApiResponse.success(
             200,

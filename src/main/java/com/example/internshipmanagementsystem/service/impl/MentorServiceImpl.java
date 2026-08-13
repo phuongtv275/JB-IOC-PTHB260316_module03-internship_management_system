@@ -32,7 +32,7 @@ public class MentorServiceImpl implements MentorService {
   }
 
   @Override
-  public MentorResponse getMentor(Long mentorId, String actorUsername) {
+  public MentorResponse getMentor(Integer mentorId, String actorUsername) {
     Mentor mentor = findMentor(mentorId);
     assertMentorOwnsProfile(mentor, actorUsername);
     return mentorMapper.toResponse(mentor);
@@ -53,20 +53,20 @@ public class MentorServiceImpl implements MentorService {
   @Override
   @Transactional
   public MentorResponse updateMentor(
-      Long mentorId, MentorProfileRequest request, String actorUsername) {
+      Integer mentorId, MentorProfileRequest request, String actorUsername) {
     Mentor mentor = findMentor(mentorId);
     assertMentorOwnsProfile(mentor, actorUsername);
     mentor.update(request.department(), request.academicRank());
     return mentorMapper.toResponse(mentor);
   }
 
-  private Mentor findMentor(Long mentorId) {
+  private Mentor findMentor(Integer mentorId) {
     return mentorRepository
         .findById(mentorId)
         .orElseThrow(() -> new ResourceNotFoundException("Mentor not found"));
   }
 
-  private User findUser(Long userId) {
+  private User findUser(Integer userId) {
     return userRepository
         .findById(userId)
         .orElseThrow(() -> new ResourceNotFoundException("User not found"));

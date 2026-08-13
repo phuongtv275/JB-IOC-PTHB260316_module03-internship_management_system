@@ -31,7 +31,7 @@ public class EvaluationCriterionServiceImpl implements EvaluationCriterionServic
   }
 
   @Override
-  public EvaluationCriterionResponse getCriterion(Long criterionId) {
+  public EvaluationCriterionResponse getCriterion(Integer criterionId) {
     return evaluationCriterionMapper.toResponse(findCriterion(criterionId));
   }
 
@@ -51,7 +51,7 @@ public class EvaluationCriterionServiceImpl implements EvaluationCriterionServic
   @Override
   @Transactional
   public EvaluationCriterionResponse updateCriterion(
-      Long criterionId, EvaluationCriterionRequest request) {
+      Integer criterionId, EvaluationCriterionRequest request) {
     validateMaximumScore(request.maxScore());
     EvaluationCriterion criterion = findCriterion(criterionId);
     if (evaluationCriterionRepository.existsByCriterionNameAndCriterionIdNot(
@@ -64,11 +64,11 @@ public class EvaluationCriterionServiceImpl implements EvaluationCriterionServic
 
   @Override
   @Transactional
-  public void deleteCriterion(Long criterionId) {
+  public void deleteCriterion(Integer criterionId) {
     evaluationCriterionRepository.delete(findCriterion(criterionId));
   }
 
-  private EvaluationCriterion findCriterion(Long criterionId) {
+  private EvaluationCriterion findCriterion(Integer criterionId) {
     return evaluationCriterionRepository
         .findById(criterionId)
         .orElseThrow(() -> new ResourceNotFoundException("Evaluation criterion not found"));

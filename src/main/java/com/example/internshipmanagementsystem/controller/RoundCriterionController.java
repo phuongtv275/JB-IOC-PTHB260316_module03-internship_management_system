@@ -30,7 +30,7 @@ public class RoundCriterionController {
   @GetMapping
   @PreAuthorize("hasAnyRole('ADMIN', 'MENTOR', 'STUDENT')")
   public ResponseEntity<ApiResponse<List<RoundCriterionResponse>>> getRoundCriteria(
-      @RequestParam(name = "round_id", required = false) Long roundId) {
+      @RequestParam(name = "round_id", required = false) Integer roundId) {
     return ResponseEntity.ok(
         ApiResponse.success(
             200, "Round criteria retrieved", roundCriterionService.getRoundCriteria(roundId)));
@@ -39,7 +39,7 @@ public class RoundCriterionController {
   @GetMapping("/{roundCriterionId}")
   @PreAuthorize("hasAnyRole('ADMIN', 'MENTOR', 'STUDENT')")
   public ResponseEntity<ApiResponse<RoundCriterionResponse>> getRoundCriterion(
-      @PathVariable Long roundCriterionId) {
+      @PathVariable Integer roundCriterionId) {
     return ResponseEntity.ok(
         ApiResponse.success(
             200,
@@ -62,7 +62,7 @@ public class RoundCriterionController {
   @PutMapping("/{roundCriterionId}")
   @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<ApiResponse<RoundCriterionResponse>> updateRoundCriterion(
-      @PathVariable Long roundCriterionId, @Valid @RequestBody RoundCriterionRequest request) {
+      @PathVariable Integer roundCriterionId, @Valid @RequestBody RoundCriterionRequest request) {
     return ResponseEntity.ok(
         ApiResponse.success(
             200,
@@ -72,7 +72,7 @@ public class RoundCriterionController {
 
   @DeleteMapping("/{roundCriterionId}")
   @PreAuthorize("hasRole('ADMIN')")
-  public ResponseEntity<Void> deleteRoundCriterion(@PathVariable Long roundCriterionId) {
+  public ResponseEntity<Void> deleteRoundCriterion(@PathVariable Integer roundCriterionId) {
     roundCriterionService.deleteRoundCriterion(roundCriterionId);
     return ResponseEntity.noContent().build();
   }

@@ -31,7 +31,7 @@ public class InternshipPhaseServiceImpl implements InternshipPhaseService {
   }
 
   @Override
-  public InternshipPhaseResponse getPhase(Long phaseId) {
+  public InternshipPhaseResponse getPhase(Integer phaseId) {
     return internshipPhaseMapper.toResponse(findPhase(phaseId));
   }
 
@@ -50,7 +50,7 @@ public class InternshipPhaseServiceImpl implements InternshipPhaseService {
 
   @Override
   @Transactional
-  public InternshipPhaseResponse updatePhase(Long phaseId, InternshipPhaseRequest request) {
+  public InternshipPhaseResponse updatePhase(Integer phaseId, InternshipPhaseRequest request) {
     validateDateRange(request.startDate(), request.endDate());
     InternshipPhase phase = findPhase(phaseId);
     if (internshipPhaseRepository.existsByPhaseNameAndPhaseIdNot(request.phaseName(), phaseId)) {
@@ -63,11 +63,11 @@ public class InternshipPhaseServiceImpl implements InternshipPhaseService {
 
   @Override
   @Transactional
-  public void deletePhase(Long phaseId) {
+  public void deletePhase(Integer phaseId) {
     internshipPhaseRepository.delete(findPhase(phaseId));
   }
 
-  private InternshipPhase findPhase(Long phaseId) {
+  private InternshipPhase findPhase(Integer phaseId) {
     return internshipPhaseRepository
         .findById(phaseId)
         .orElseThrow(() -> new ResourceNotFoundException("Internship phase not found"));

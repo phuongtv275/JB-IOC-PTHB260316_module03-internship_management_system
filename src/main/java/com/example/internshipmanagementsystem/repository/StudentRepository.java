@@ -3,9 +3,9 @@ package com.example.internshipmanagementsystem.repository;
 import com.example.internshipmanagementsystem.entity.Student;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface StudentRepository extends JpaRepository<Student, Long> {
+public interface StudentRepository extends JpaRepository<Student, Integer> {
 
   boolean existsByStudentCode(String studentCode);
 
-  boolean existsByStudentCodeAndStudentIdNot(String studentCode, Long studentId);
+  boolean existsByStudentCodeAndStudentIdNot(String studentCode, Integer studentId);
 }

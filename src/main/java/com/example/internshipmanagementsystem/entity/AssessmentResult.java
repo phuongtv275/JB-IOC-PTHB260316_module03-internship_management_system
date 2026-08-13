@@ -29,7 +29,7 @@ public class AssessmentResult {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "resultid")
-  private Long resultId;
+  private Integer resultId;
 
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
   @JoinColumn(name = "assignmentid")

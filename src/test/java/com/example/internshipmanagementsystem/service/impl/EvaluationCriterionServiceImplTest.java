@@ -61,17 +61,17 @@ class EvaluationCriterionServiceImplTest {
         EvaluationCriterion.create("Communication", null, new BigDecimal("10.00"));
     EvaluationCriterionRequest request =
         new EvaluationCriterionRequest("Teamwork", null, new BigDecimal("20.00"));
-    when(evaluationCriterionRepository.findById(1L)).thenReturn(Optional.of(criterion));
+    when(evaluationCriterionRepository.findById(1)).thenReturn(Optional.of(criterion));
 
-    assertThat(evaluationCriterionService.updateCriterion(1L, request).criterionName())
+    assertThat(evaluationCriterionService.updateCriterion(1, request).criterionName())
         .isEqualTo("Teamwork");
   }
 
   @Test
   void shouldThrowException_whenCriterionDoesNotExist() {
-    when(evaluationCriterionRepository.findById(1L)).thenReturn(Optional.empty());
+    when(evaluationCriterionRepository.findById(1)).thenReturn(Optional.empty());
 
-    assertThatThrownBy(() -> evaluationCriterionService.getCriterion(1L))
+    assertThatThrownBy(() -> evaluationCriterionService.getCriterion(1))
         .isInstanceOf(ResourceNotFoundException.class);
   }
 
@@ -79,8 +79,8 @@ class EvaluationCriterionServiceImplTest {
   void shouldDeleteCriterion_whenCriterionExists() {
     EvaluationCriterion criterion =
         EvaluationCriterion.create("Communication", null, new BigDecimal("10.00"));
-    when(evaluationCriterionRepository.findById(1L)).thenReturn(Optional.of(criterion));
+    when(evaluationCriterionRepository.findById(1)).thenReturn(Optional.of(criterion));
 
-    evaluationCriterionService.deleteCriterion(1L);
+    evaluationCriterionService.deleteCriterion(1);
   }
 }

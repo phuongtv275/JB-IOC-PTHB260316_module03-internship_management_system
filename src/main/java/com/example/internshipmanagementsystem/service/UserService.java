@@ -12,17 +12,17 @@ public interface UserService {
 
   List<UserResponse> getUsers(Role role);
 
-  UserResponse getUser(Long userId);
+  UserResponse getUser(Integer userId);
 
   UserResponse getCurrentUser(String username);
 
   UserResponse createUser(CreateUserRequest request);
 
-  UserResponse updateUser(Long userId, UpdateUserRequest request);
+  UserResponse updateUser(Integer userId, UpdateUserRequest request);
 
-  UserResponse changeStatus(Long userId, ChangeStatusRequest request);
+  UserResponse changeStatus(Integer userId, ChangeStatusRequest request);
 
-  UserResponse changeRole(Long userId, ChangeRoleRequest request, String actorUsername);
+  UserResponse changeRole(Integer userId, ChangeRoleRequest request, String actorUsername);
 
-  void deleteUser(Long userId);
+  void deleteUser(Integer userId);
 }
