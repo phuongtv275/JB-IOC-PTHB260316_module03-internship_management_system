@@ -13,18 +13,24 @@ import com.example.internshipmanagementsystem.entity.User;
 import com.example.internshipmanagementsystem.exception.AccessDeniedBusinessException;
 import com.example.internshipmanagementsystem.exception.DuplicateResourceException;
 import com.example.internshipmanagementsystem.mapper.UserMapper;
+import com.example.internshipmanagementsystem.repository.MentorRepository;
+import com.example.internshipmanagementsystem.repository.StudentRepository;
 import com.example.internshipmanagementsystem.repository.UserRepository;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.util.ReflectionTestUtils;
 
 class UserServiceImplTest {
 
   private final UserRepository userRepository = Mockito.mock(UserRepository.class);
+  private final StudentRepository studentRepository = Mockito.mock(StudentRepository.class);
+  private final MentorRepository mentorRepository = Mockito.mock(MentorRepository.class);
   private final PasswordEncoder passwordEncoder = Mockito.mock(PasswordEncoder.class);
   private final UserServiceImpl userService =
-      new UserServiceImpl(userRepository, passwordEncoder, new UserMapper());
+      new UserServiceImpl(
+          userRepository, studentRepository, mentorRepository, passwordEncoder, new UserMapper());
 
   @Test
   void shouldCreateUser_whenUsernameAndEmailAreAvailable() {
@@ -80,5 +86,30 @@ class UserServiceImplTest {
     UserResponse response = userService.updateUser(1L, request);
 
     org.assertj.core.api.Assertions.assertThat(response.role()).isEqualTo(Role.ADMIN);
+  }
+
+  @Test
+  void shouldThrowException_whenStudentWithProfileChangesToAnotherRole() {
+    User student =
+        User.create("student", "hash", "Student", "student@example.com", null, Role.STUDENT);
+    ReflectionTestUtils.setField(student, "userId", 1L);
+    when(userRepository.findById(1L)).thenReturn(Optional.of(student));
+    when(studentRepository.existsById(1L)).thenReturn(true);
+
+    assertThatThrownBy(
+            () -> userService.changeRole(1L, new ChangeRoleRequest(Role.MENTOR), "admin"))
+        .isInstanceOf(AccessDeniedBusinessException.class);
+  }
+
+  @Test
+  void shouldThrowException_whenMentorWithProfileChangesToAnotherRole() {
+    User mentor = User.create("mentor", "hash", "Mentor", "mentor@example.com", null, Role.MENTOR);
+    ReflectionTestUtils.setField(mentor, "userId", 1L);
+    when(userRepository.findById(1L)).thenReturn(Optional.of(mentor));
+    when(mentorRepository.existsById(1L)).thenReturn(true);
+
+    assertThatThrownBy(
+            () -> userService.changeRole(1L, new ChangeRoleRequest(Role.STUDENT), "admin"))
+        .isInstanceOf(AccessDeniedBusinessException.class);
   }
 }

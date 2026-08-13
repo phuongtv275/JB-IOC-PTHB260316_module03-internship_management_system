@@ -11,6 +11,8 @@ import com.example.internshipmanagementsystem.exception.AccessDeniedBusinessExce
 import com.example.internshipmanagementsystem.exception.DuplicateResourceException;
 import com.example.internshipmanagementsystem.exception.ResourceNotFoundException;
 import com.example.internshipmanagementsystem.mapper.UserMapper;
+import com.example.internshipmanagementsystem.repository.MentorRepository;
+import com.example.internshipmanagementsystem.repository.StudentRepository;
 import com.example.internshipmanagementsystem.repository.UserRepository;
 import com.example.internshipmanagementsystem.service.UserService;
 import java.util.List;
@@ -25,6 +27,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserServiceImpl implements UserService {
 
   private final UserRepository userRepository;
+  private final StudentRepository studentRepository;
+  private final MentorRepository mentorRepository;
   private final PasswordEncoder passwordEncoder;
   private final UserMapper userMapper;
 
@@ -89,6 +93,7 @@ public class UserServiceImpl implements UserService {
       throw new AccessDeniedBusinessException(
           "An administrator cannot change another administrator's role");
     }
+    validateProfileRoleChange(target, request.role());
     target.changeRole(request.role());
     return userMapper.toResponse(target);
   }
@@ -121,6 +126,21 @@ public class UserServiceImpl implements UserService {
     if (userRepository.existsByUsernameAndUserIdNot(username, userId)
         || userRepository.existsByEmailAndUserIdNot(email, userId)) {
       throw new DuplicateResourceException("Username or email already exists");
+    }
+  }
+
+  private void validateProfileRoleChange(User user, Role newRole) {
+    if (user.getRole() == Role.STUDENT
+        && newRole != Role.STUDENT
+        && studentRepository.existsById(user.getUserId())) {
+      throw new AccessDeniedBusinessException(
+          "A user with a student profile must keep the STUDENT role");
+    }
+    if (user.getRole() == Role.MENTOR
+        && newRole != Role.MENTOR
+        && mentorRepository.existsById(user.getUserId())) {
+      throw new AccessDeniedBusinessException(
+          "A user with a mentor profile must keep the MENTOR role");
     }
   }
 }
