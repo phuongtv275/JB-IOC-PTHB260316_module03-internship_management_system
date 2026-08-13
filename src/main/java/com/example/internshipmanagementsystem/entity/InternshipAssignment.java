@@ -18,6 +18,8 @@ import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 @Entity
 @Table(
@@ -48,7 +50,8 @@ public class InternshipAssignment {
   private LocalDateTime assignedDate;
 
   @Enumerated(EnumType.STRING)
-  @Column(nullable = false)
+  @JdbcTypeCode(SqlTypes.NAMED_ENUM)
+  @Column(nullable = false, columnDefinition = "assignment_status")
   private AssignmentStatus status;
 
   @Column(name = "createdat", nullable = false, updatable = false)
