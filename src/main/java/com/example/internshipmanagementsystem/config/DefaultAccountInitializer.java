@@ -51,6 +51,6 @@ public class DefaultAccountInitializer implements ApplicationRunner {
             email,
             DEFAULT_PHONE_NUMBER,
             role));
-    log.info("Created default {} account", role);
+    log.info("IMS_EVENT DEFAULT_ACCOUNT_CREATED ROLE={}", role);
   }
 }

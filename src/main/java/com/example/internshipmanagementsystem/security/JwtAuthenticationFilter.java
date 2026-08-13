@@ -1,5 +1,6 @@
 package com.example.internshipmanagementsystem.security;
 
+import com.example.internshipmanagementsystem.config.TraceIdFilter;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -52,5 +53,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             userDetails, null, userDetails.getAuthorities());
     authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
     SecurityContextHolder.getContext().setAuthentication(authentication);
+    request.setAttribute(
+        TraceIdFilter.AUTHENTICATED_ROLE_ATTRIBUTE,
+        userDetails.getAuthorities().stream()
+            .findFirst()
+            .map(authority -> authority.getAuthority().replace("ROLE_", ""))
+            .orElse("AUTHENTICATED"));
   }
 }

@@ -23,11 +23,13 @@ import com.example.internshipmanagementsystem.service.AssessmentResultService;
 import java.math.BigDecimal;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 @Transactional(readOnly = true)
 public class AssessmentResultServiceImpl implements AssessmentResultService {
 
@@ -73,7 +75,15 @@ public class AssessmentResultServiceImpl implements AssessmentResultService {
     AssessmentResult result =
         AssessmentResult.create(
             assignment, round, criterion, request.score(), request.comments(), evaluator);
-    return assessmentResultMapper.toResponse(assessmentResultRepository.save(result));
+    AssessmentResultResponse response =
+        assessmentResultMapper.toResponse(assessmentResultRepository.save(result));
+    log.info(
+        "IMS_EVENT ASSESSMENT_RESULT_CREATED RESULT_ID={} ASSIGNMENT_ID={} ROUND_ID={} CRITERION_ID={}",
+        response.resultId(),
+        response.assignmentId(),
+        response.roundId(),
+        response.criterionId());
+    return response;
   }
 
   @Override

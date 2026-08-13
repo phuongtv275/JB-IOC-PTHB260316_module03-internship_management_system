@@ -17,12 +17,14 @@ import com.example.internshipmanagementsystem.repository.UserRepository;
 import com.example.internshipmanagementsystem.service.UserService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 @Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
 
@@ -60,7 +62,9 @@ public class UserServiceImpl implements UserService {
             request.email(),
             request.phoneNumber(),
             request.role());
-    return userMapper.toResponse(userRepository.save(user));
+    UserResponse response = userMapper.toResponse(userRepository.save(user));
+    log.info("IMS_EVENT USER_CREATED USER_ID={} ROLE={}", response.userId(), response.role());
+    return response;
   }
 
   @Override

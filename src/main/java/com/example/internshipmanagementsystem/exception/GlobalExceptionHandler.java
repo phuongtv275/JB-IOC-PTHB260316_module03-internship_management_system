@@ -3,6 +3,7 @@ package com.example.internshipmanagementsystem.exception;
 import com.example.internshipmanagementsystem.dto.response.ErrorResponse;
 import com.example.internshipmanagementsystem.dto.response.FieldErrorResponse;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 @RestControllerAdvice
+@Slf4j
 public class GlobalExceptionHandler {
 
   @ExceptionHandler(BusinessException.class)
@@ -52,6 +54,7 @@ public class GlobalExceptionHandler {
 
   @ExceptionHandler(Exception.class)
   ResponseEntity<ErrorResponse> handleUnexpectedException(Exception exception) {
+    log.error("IMS_ERROR STATUS=500 ERROR_CODE=INTERNAL_SERVER_ERROR", exception);
     return response(
         HttpStatus.INTERNAL_SERVER_ERROR,
         "INTERNAL_SERVER_ERROR",

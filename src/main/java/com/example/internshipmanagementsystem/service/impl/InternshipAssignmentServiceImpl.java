@@ -21,11 +21,13 @@ import com.example.internshipmanagementsystem.repository.UserRepository;
 import com.example.internshipmanagementsystem.service.InternshipAssignmentService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 @Transactional(readOnly = true)
 public class InternshipAssignmentServiceImpl implements InternshipAssignmentService {
 
@@ -67,7 +69,15 @@ public class InternshipAssignmentServiceImpl implements InternshipAssignmentServ
             findStudent(request.studentId()),
             findMentor(request.mentorId()),
             findPhase(request.phaseId()));
-    return internshipAssignmentMapper.toResponse(internshipAssignmentRepository.save(assignment));
+    InternshipAssignmentResponse response =
+        internshipAssignmentMapper.toResponse(internshipAssignmentRepository.save(assignment));
+    log.info(
+        "IMS_EVENT ASSIGNMENT_CREATED ASSIGNMENT_ID={} STUDENT_ID={} MENTOR_ID={} PHASE_ID={}",
+        response.assignmentId(),
+        response.studentId(),
+        response.mentorId(),
+        response.phaseId());
+    return response;
   }
 
   @Override
