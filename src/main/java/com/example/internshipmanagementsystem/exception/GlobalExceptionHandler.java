@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -45,6 +46,15 @@ public class GlobalExceptionHandler {
   ResponseEntity<ErrorResponse> handleAuthenticationException(AuthenticationException exception) {
     return response(
         HttpStatus.UNAUTHORIZED, "BAD_CREDENTIALS", "Invalid username or password", List.of());
+  }
+
+  @ExceptionHandler(DisabledException.class)
+  ResponseEntity<ErrorResponse> handleDisabledAccountException(DisabledException exception) {
+    return response(
+        HttpStatus.UNAUTHORIZED,
+        "ACCOUNT_DISABLED",
+        "Tài khoản hiện tại đã bị vô hiệu hóa. Liên hệ với mentor hoặc quản lý nhân sự để kích hoạt lại tài khoản",
+        List.of());
   }
 
   @ExceptionHandler(AccessDeniedException.class)
