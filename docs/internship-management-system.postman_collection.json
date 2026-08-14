@@ -1,142 +1,125 @@
 {
   "info": {
     "_postman_id": "a55ab723-99d4-4c51-b979-2a3e4a84c2dd",
-    "name": "Internship Management System",
+    "name": "Internship Management System - Full API Scenario",
+    "description": "Run folders in order against a fresh development database. Names prefixed QA_ use {{runId}} and are isolated per run. Requests named SEC/VAL/RULE are expected negative cases.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
+  "event": [{"listen":"prerequest","script":{"type":"text/javascript","exec":["if (!pm.collectionVariables.get('runId')) { pm.collectionVariables.set('runId', Date.now().toString()); }"]}}],
   "variable": [
-    { "key": "baseUrl", "value": "http://localhost:8080" },
-    { "key": "adminToken", "value": "" },
-    { "key": "mentorToken", "value": "" },
-    { "key": "studentToken", "value": "" },
-    { "key": "mentorId", "value": "" },
-    { "key": "studentId", "value": "" },
-    { "key": "phaseId", "value": "" },
-    { "key": "criterionId", "value": "" },
-    { "key": "roundId", "value": "" },
-    { "key": "assignmentId", "value": "" },
-    { "key": "resultId", "value": "" }
+    {"key":"baseUrl","value":"http://localhost:8080"},{"key":"runId","value":""},
+    {"key":"adminToken","value":""},{"key":"mentorToken","value":""},{"key":"mentor2Token","value":""},{"key":"studentToken","value":""},{"key":"student2Token","value":""},
+    {"key":"adminId","value":""},{"key":"admin2Id","value":""},{"key":"mentor1Id","value":""},{"key":"mentor2Id","value":""},{"key":"student1Id","value":""},{"key":"student2Id","value":""},
+    {"key":"phase1Id","value":""},{"key":"phase2Id","value":""},{"key":"criterion1Id","value":""},{"key":"criterion2Id","value":""},{"key":"criterion3Id","value":""},{"key":"round1Id","value":""},{"key":"round2Id","value":""},{"key":"roundCriterion1Id","value":""},{"key":"roundCriterion2Id","value":""},{"key":"assignment1Id","value":""},{"key":"result1Id","value":""}
   ],
   "item": [
-    {
-      "name": "Happy path",
-      "item": [
-        {
-          "name": "01 - Login as default ADMIN",
-          "request": {
-            "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "url": "{{baseUrl}}/api/auth/login",
-            "body": { "mode": "raw", "raw": "{\n  \"username\": \"ADMIN\",\n  \"password\": \"admin\"\n}" }
-          },
-          "event": [{ "listen": "test", "script": { "exec": ["pm.collectionVariables.set('adminToken', pm.response.json().data.accessToken);"] } }]
-        },
-        {
-          "name": "02 - Get seeded account IDs",
-          "request": {
-            "method": "GET",
-            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
-            "url": "{{baseUrl}}/api/users"
-          },
-          "event": [{ "listen": "test", "script": { "exec": ["const users = pm.response.json().data;", "pm.collectionVariables.set('mentorId', users.find(user => user.username === 'MENTOR').userId);", "pm.collectionVariables.set('studentId', users.find(user => user.username === 'STUDENT').userId);"] } }]
-        },
-        {
-          "name": "03 - Create MENTOR profile",
-          "request": {
-            "method": "POST",
-            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }, { "key": "Content-Type", "value": "application/json" }],
-            "url": "{{baseUrl}}/api/mentors",
-            "body": { "mode": "raw", "raw": "{\n  \"mentorId\": {{mentorId}},\n  \"department\": \"Computer Science\",\n  \"academicRank\": \"MSc\"\n}" }
-          }
-        },
-        {
-          "name": "04 - Create STUDENT profile",
-          "request": {
-            "method": "POST",
-            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }, { "key": "Content-Type", "value": "application/json" }],
-            "url": "{{baseUrl}}/api/students",
-            "body": { "mode": "raw", "raw": "{\n  \"studentId\": {{studentId}},\n  \"studentCode\": \"DEMO-001\",\n  \"major\": \"Computer Science\",\n  \"className\": \"PTHB260316\",\n  \"dateOfBirth\": \"2004-01-01\",\n  \"address\": \"Hanoi\"\n}" }
-          }
-        },
-        {
-          "name": "05 - Create internship phase",
-          "request": {
-            "method": "POST",
-            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }, { "key": "Content-Type", "value": "application/json" }],
-            "url": "{{baseUrl}}/api/internship_phases",
-            "body": { "mode": "raw", "raw": "{\n  \"phaseName\": \"Demo Internship 2026\",\n  \"startDate\": \"2026-09-01\",\n  \"endDate\": \"2026-12-31\",\n  \"description\": \"Postman happy-path scenario\"\n}" }
-          },
-          "event": [{ "listen": "test", "script": { "exec": ["pm.collectionVariables.set('phaseId', pm.response.json().data.phaseId);"] } }]
-        },
-        {
-          "name": "06 - Create evaluation criterion",
-          "request": {
-            "method": "POST",
-            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }, { "key": "Content-Type", "value": "application/json" }],
-            "url": "{{baseUrl}}/api/evaluation_criteria",
-            "body": { "mode": "raw", "raw": "{\n  \"criterionName\": \"Technical Skills - Demo\",\n  \"description\": \"Technical delivery\",\n  \"maxScore\": 10\n}" }
-          },
-          "event": [{ "listen": "test", "script": { "exec": ["pm.collectionVariables.set('criterionId', pm.response.json().data.criterionId);"] } }]
-        },
-        {
-          "name": "07 - Create assessment round",
-          "request": {
-            "method": "POST",
-            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }, { "key": "Content-Type", "value": "application/json" }],
-            "url": "{{baseUrl}}/api/assessment_rounds",
-            "body": { "mode": "raw", "raw": "{\n  \"phaseId\": {{phaseId}},\n  \"roundName\": \"Demo Final Review\",\n  \"startDate\": \"2026-12-01\",\n  \"endDate\": \"2026-12-31\",\n  \"description\": \"Final review\",\n  \"criteria\": [{ \"criterionId\": {{criterionId}}, \"weight\": 1 }]\n}" }
-          },
-          "event": [{ "listen": "test", "script": { "exec": ["pm.collectionVariables.set('roundId', pm.response.json().data.roundId);"] } }]
-        },
-        {
-          "name": "08 - Create internship assignment",
-          "request": {
-            "method": "POST",
-            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }, { "key": "Content-Type", "value": "application/json" }],
-            "url": "{{baseUrl}}/api/internship_assignments",
-            "body": { "mode": "raw", "raw": "{\n  \"studentId\": {{studentId}},\n  \"mentorId\": {{mentorId}},\n  \"phaseId\": {{phaseId}}\n}" }
-          },
-          "event": [{ "listen": "test", "script": { "exec": ["pm.collectionVariables.set('assignmentId', pm.response.json().data.assignmentId);"] } }]
-        },
-        {
-          "name": "09 - Login as MENTOR",
-          "request": {
-            "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "url": "{{baseUrl}}/api/auth/login",
-            "body": { "mode": "raw", "raw": "{\n  \"username\": \"MENTOR\",\n  \"password\": \"mentor\"\n}" }
-          },
-          "event": [{ "listen": "test", "script": { "exec": ["pm.collectionVariables.set('mentorToken', pm.response.json().data.accessToken);"] } }]
-        },
-        {
-          "name": "10 - Mentor creates assessment result",
-          "request": {
-            "method": "POST",
-            "header": [{ "key": "Authorization", "value": "Bearer {{mentorToken}}" }, { "key": "Content-Type", "value": "application/json" }],
-            "url": "{{baseUrl}}/api/assessment_results",
-            "body": { "mode": "raw", "raw": "{\n  \"assignmentId\": {{assignmentId}},\n  \"roundId\": {{roundId}},\n  \"criterionId\": {{criterionId}},\n  \"score\": 8.5,\n  \"comments\": \"Demo result\"\n}" }
-          },
-          "event": [{ "listen": "test", "script": { "exec": ["pm.collectionVariables.set('resultId', pm.response.json().data.resultId);"] } }]
-        },
-        {
-          "name": "11 - Login as STUDENT",
-          "request": {
-            "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "url": "{{baseUrl}}/api/auth/login",
-            "body": { "mode": "raw", "raw": "{\n  \"username\": \"STUDENT\",\n  \"password\": \"student\"\n}" }
-          },
-          "event": [{ "listen": "test", "script": { "exec": ["pm.collectionVariables.set('studentToken', pm.response.json().data.accessToken);"] } }]
-        },
-        {
-          "name": "12 - Student reads own results",
-          "request": {
-            "method": "GET",
-            "header": [{ "key": "Authorization", "value": "Bearer {{studentToken}}" }],
-            "url": "{{baseUrl}}/api/assessment_results"
-          }
-        }
-      ]
-    }
+    {"name":"01 - Authentication and users","item":[
+      {"name":"AUTH-01 Login ADMIN","request":{"method":"POST","header":[{"key":"Content-Type","value":"application/json"}],"url":"{{baseUrl}}/api/auth/login","body":{"mode":"raw","raw":"{\n  \"username\": \"ADMIN\",\n  \"password\": \"admin\"\n}"}},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(200);","pm.collectionVariables.set('adminToken', pm.response.json().data.accessToken);"]}}]},
+      {"name":"AUTH-05 Current ADMIN","request":{"method":"GET","header":[{"key":"Authorization","value":"Bearer {{adminToken}}"}],"url":"{{baseUrl}}/api/auth/me"},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(200);","pm.expect(pm.response.json().data.role).to.eql('ADMIN');"]}}]},
+      {"name":"AUTH-03 Invalid login","request":{"method":"POST","header":[{"key":"Content-Type","value":"application/json"}],"url":"{{baseUrl}}/api/auth/login","body":{"mode":"raw","raw":"{\"username\":\"ADMIN\",\"password\":\"wrong-password\"}"}},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(401);"]}}]},
+      {"name":"AUTH-04 Invalid login body","request":{"method":"POST","header":[{"key":"Content-Type","value":"application/json"}],"url":"{{baseUrl}}/api/auth/login","body":{"mode":"raw","raw":"{\"username\":\"\",\"password\":\"\"}"}},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(400);"]}}]},
+      {"name":"USER-01 Get seeded users and IDs","request":{"method":"GET","header":[{"key":"Authorization","value":"Bearer {{adminToken}}"}],"url":"{{baseUrl}}/api/users"},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(200);","const users = pm.response.json().data;","pm.collectionVariables.set('adminId', users.find(x => x.username === 'ADMIN').userId);","pm.collectionVariables.set('mentor1Id', users.find(x => x.username === 'MENTOR').userId);","pm.collectionVariables.set('student1Id', users.find(x => x.username === 'STUDENT').userId);"]}}]},
+      {"name":"USER-02 Filter users by MENTOR","request":{"method":"GET","header":[{"key":"Authorization","value":"Bearer {{adminToken}}"}],"url":"{{baseUrl}}/api/users?role=MENTOR"},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(200);","pm.response.json().data.forEach(x => pm.expect(x.role).to.eql('MENTOR'));"]}}]},
+      {"name":"USER-05 Create MENTOR_2","request":{"method":"POST","header":[{"key":"Authorization","value":"Bearer {{adminToken}}"},{"key":"Content-Type","value":"application/json"}],"url":"{{baseUrl}}/api/users","body":{"mode":"raw","raw":"{\"username\":\"QA_{{runId}}_MENTOR_2\",\"password\":\"qa-password-2\",\"fullName\":\"QA Mentor 2\",\"email\":\"qa-{{runId}}-mentor2@example.test\",\"phoneNumber\":\"0900000002\",\"role\":\"MENTOR\"}"}},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(201);","pm.collectionVariables.set('mentor2Id', pm.response.json().data.userId);"]}}]},
+      {"name":"USER-05 Create STUDENT_2","request":{"method":"POST","header":[{"key":"Authorization","value":"Bearer {{adminToken}}"},{"key":"Content-Type","value":"application/json"}],"url":"{{baseUrl}}/api/users","body":{"mode":"raw","raw":"{\"username\":\"QA_{{runId}}_STUDENT_2\",\"password\":\"qa-password-2\",\"fullName\":\"QA Student 2\",\"email\":\"qa-{{runId}}-student2@example.test\",\"phoneNumber\":\"0900000003\",\"role\":\"STUDENT\"}"}},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(201);","pm.collectionVariables.set('student2Id', pm.response.json().data.userId);"]}}]},
+      {"name":"USER-05 Create ADMIN_2","request":{"method":"POST","header":[{"key":"Authorization","value":"Bearer {{adminToken}}"},{"key":"Content-Type","value":"application/json"}],"url":"{{baseUrl}}/api/users","body":{"mode":"raw","raw":"{\"username\":\"QA_{{runId}}_ADMIN_2\",\"password\":\"qa-password-2\",\"fullName\":\"QA Admin 2\",\"email\":\"qa-{{runId}}-admin2@example.test\",\"phoneNumber\":\"0900000004\",\"role\":\"ADMIN\"}"}},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(201);","pm.collectionVariables.set('admin2Id', pm.response.json().data.userId);"]}}]},
+      {"name":"USER-06 Duplicate username","request":{"method":"POST","header":[{"key":"Authorization","value":"Bearer {{adminToken}}"},{"key":"Content-Type","value":"application/json"}],"url":"{{baseUrl}}/api/users","body":{"mode":"raw","raw":"{\"username\":\"QA_{{runId}}_MENTOR_2\",\"password\":\"qa-password-2\",\"fullName\":\"Duplicate\",\"email\":\"duplicate-{{runId}}@example.test\",\"role\":\"MENTOR\"}"}},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(400);","pm.expect(pm.response.json().errorCode).to.eql('DUPLICATE_RESOURCE');"]}}]},
+      {"name":"USER-07 Invalid user body","request":{"method":"POST","header":[{"key":"Authorization","value":"Bearer {{adminToken}}"},{"key":"Content-Type","value":"application/json"}],"url":"{{baseUrl}}/api/users","body":{"mode":"raw","raw":"{\"username\":\"\",\"password\":\"short\",\"fullName\":\"\",\"email\":\"invalid\",\"role\":\"INVALID\"}"}},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(400);"]}}]},
+      {"name":"USER-08 Update ADMIN_2","request":{"method":"PUT","header":[{"key":"Authorization","value":"Bearer {{adminToken}}"},{"key":"Content-Type","value":"application/json"}],"url":"{{baseUrl}}/api/users/{{admin2Id}}","body":{"mode":"raw","raw":"{\"username\":\"QA_{{runId}}_ADMIN_2_UPDATED\",\"password\":\"qa-updated-password\",\"fullName\":\"QA Admin Updated\",\"email\":\"qa-{{runId}}-admin2-updated@example.test\",\"phoneNumber\":\"0900000005\"}"}},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(200);"]}}]},
+      {"name":"USER-09 Disable STUDENT_2","request":{"method":"PUT","header":[{"key":"Authorization","value":"Bearer {{adminToken}}"},{"key":"Content-Type","value":"application/json"}],"url":"{{baseUrl}}/api/users/{{student2Id}}/status","body":{"mode":"raw","raw":"{\"isActive\":false}"}},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(200);"]}}]},
+      {"name":"USER-09 Disabled user cannot login","request":{"method":"POST","header":[{"key":"Content-Type","value":"application/json"}],"url":"{{baseUrl}}/api/auth/login","body":{"mode":"raw","raw":"{\"username\":\"QA_{{runId}}_STUDENT_2\",\"password\":\"qa-password-2\"}"}},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(401);"]}}]},
+      {"name":"USER-09 Enable STUDENT_2","request":{"method":"PUT","header":[{"key":"Authorization","value":"Bearer {{adminToken}}"},{"key":"Content-Type","value":"application/json"}],"url":"{{baseUrl}}/api/users/{{student2Id}}/status","body":{"mode":"raw","raw":"{\"isActive\":true}"}},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(200);"]}}]},
+      {"name":"USER-10 Change STUDENT_2 to MENTOR then back","request":{"method":"PUT","header":[{"key":"Authorization","value":"Bearer {{adminToken}}"},{"key":"Content-Type","value":"application/json"}],"url":"{{baseUrl}}/api/users/{{student2Id}}/role","body":{"mode":"raw","raw":"{\"role\":\"MENTOR\"}"}},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(200);"]}}]},
+      {"name":"USER-10 Restore STUDENT_2 role","request":{"method":"PUT","header":[{"key":"Authorization","value":"Bearer {{adminToken}}"},{"key":"Content-Type","value":"application/json"}],"url":"{{baseUrl}}/api/users/{{student2Id}}/role","body":{"mode":"raw","raw":"{\"role\":\"STUDENT\"}"}},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(200);"]}}]},
+      {"name":"USER-12 Cannot change another ADMIN role","request":{"method":"PUT","header":[{"key":"Authorization","value":"Bearer {{adminToken}}"},{"key":"Content-Type","value":"application/json"}],"url":"{{baseUrl}}/api/users/{{admin2Id}}/role","body":{"mode":"raw","raw":"{\"role\":\"STUDENT\"}"}},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(403);"]}}]}
+    ]},
+    {"name":"02 - Profiles and role ownership","item":[
+      {"name":"MENT-01 Create MENTOR profile","request":{"method":"POST","header":[{"key":"Authorization","value":"Bearer {{adminToken}}"},{"key":"Content-Type","value":"application/json"}],"url":"{{baseUrl}}/api/mentors","body":{"mode":"raw","raw":"{\"mentorId\":{{mentor1Id}},\"department\":\"Computer Science\",\"academicRank\":\"MSc\"}"}},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(201);"]}}]},
+      {"name":"MENT-01 Create MENTOR_2 profile","request":{"method":"POST","header":[{"key":"Authorization","value":"Bearer {{adminToken}}"},{"key":"Content-Type","value":"application/json"}],"url":"{{baseUrl}}/api/mentors","body":{"mode":"raw","raw":"{\"mentorId\":{{mentor2Id}},\"department\":\"QA Department\",\"academicRank\":\"PhD\"}"}},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(201);"]}}]},
+      {"name":"STU-01 Create STUDENT profile","request":{"method":"POST","header":[{"key":"Authorization","value":"Bearer {{adminToken}}"},{"key":"Content-Type","value":"application/json"}],"url":"{{baseUrl}}/api/students","body":{"mode":"raw","raw":"{\"studentId\":{{student1Id}},\"studentCode\":\"QA-{{runId}}-001\",\"major\":\"Computer Science\",\"className\":\"PTHB260316\",\"dateOfBirth\":\"2004-01-01\",\"address\":\"Hanoi\"}"}},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(201);"]}}]},
+      {"name":"STU-01 Create STUDENT_2 profile","request":{"method":"POST","header":[{"key":"Authorization","value":"Bearer {{adminToken}}"},{"key":"Content-Type","value":"application/json"}],"url":"{{baseUrl}}/api/students","body":{"mode":"raw","raw":"{\"studentId\":{{student2Id}},\"studentCode\":\"QA-{{runId}}-002\",\"major\":\"QA\",\"className\":\"PTHB260316\",\"dateOfBirth\":\"2004-02-01\",\"address\":\"Hanoi\"}"}},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(201);"]}}]},
+      {"name":"AUTH-02 Login all profile users","request":{"method":"POST","header":[{"key":"Content-Type","value":"application/json"}],"url":"{{baseUrl}}/api/auth/login","body":{"mode":"raw","raw":"{\"username\":\"MENTOR\",\"password\":\"mentor\"}"}},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(200);","pm.collectionVariables.set('mentorToken', pm.response.json().data.accessToken);"]}}]},
+      {"name":"AUTH-02 Login MENTOR_2","request":{"method":"POST","header":[{"key":"Content-Type","value":"application/json"}],"url":"{{baseUrl}}/api/auth/login","body":{"mode":"raw","raw":"{\"username\":\"QA_{{runId}}_MENTOR_2\",\"password\":\"qa-password-2\"}"}},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(200);","pm.collectionVariables.set('mentor2Token', pm.response.json().data.accessToken);"]}}]},
+      {"name":"AUTH-02 Login STUDENT","request":{"method":"POST","header":[{"key":"Content-Type","value":"application/json"}],"url":"{{baseUrl}}/api/auth/login","body":{"mode":"raw","raw":"{\"username\":\"STUDENT\",\"password\":\"student\"}"}},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(200);","pm.collectionVariables.set('studentToken', pm.response.json().data.accessToken);"]}}]},
+      {"name":"AUTH-02 Login STUDENT_2","request":{"method":"POST","header":[{"key":"Content-Type","value":"application/json"}],"url":"{{baseUrl}}/api/auth/login","body":{"mode":"raw","raw":"{\"username\":\"QA_{{runId}}_STUDENT_2\",\"password\":\"qa-password-2\"}"}},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(200);","pm.collectionVariables.set('student2Token', pm.response.json().data.accessToken);"]}}]},
+      {"name":"STU-04 Get students as ADMIN","request":{"method":"GET","header":[{"key":"Authorization","value":"Bearer {{adminToken}}"}],"url":"{{baseUrl}}/api/students"},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(200);"]}}]},
+      {"name":"STU-05 Get own student profile","request":{"method":"GET","header":[{"key":"Authorization","value":"Bearer {{studentToken}}"}],"url":"{{baseUrl}}/api/students/{{student1Id}}"},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(200);"]}}]},
+      {"name":"STU-06 Cannot read other student","request":{"method":"GET","header":[{"key":"Authorization","value":"Bearer {{studentToken}}"}],"url":"{{baseUrl}}/api/students/{{student2Id}}"},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(403);"]}}]},
+      {"name":"STU-07 Update own student profile","request":{"method":"PUT","header":[{"key":"Authorization","value":"Bearer {{studentToken}}"},{"key":"Content-Type","value":"application/json"}],"url":"{{baseUrl}}/api/students/{{student1Id}}","body":{"mode":"raw","raw":"{\"studentId\":{{student1Id}},\"studentCode\":\"QA-{{runId}}-001\",\"major\":\"Computer Science Updated\",\"className\":\"PTHB260316\",\"dateOfBirth\":\"2004-01-01\",\"address\":\"Hanoi\"}"}},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(200);"]}}]},
+      {"name":"MENT-03 Get mentors as STUDENT","request":{"method":"GET","header":[{"key":"Authorization","value":"Bearer {{studentToken}}"}],"url":"{{baseUrl}}/api/mentors"},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(200);"]}}]},
+      {"name":"MENT-05 Cannot update other mentor","request":{"method":"PUT","header":[{"key":"Authorization","value":"Bearer {{mentorToken}}"},{"key":"Content-Type","value":"application/json"}],"url":"{{baseUrl}}/api/mentors/{{mentor2Id}}","body":{"mode":"raw","raw":"{\"mentorId\":{{mentor2Id}},\"department\":\"No\",\"academicRank\":\"No\"}"}},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(403);"]}}]},
+      {"name":"MENT-06 Update own mentor profile","request":{"method":"PUT","header":[{"key":"Authorization","value":"Bearer {{mentorToken}}"},{"key":"Content-Type","value":"application/json"}],"url":"{{baseUrl}}/api/mentors/{{mentor1Id}}","body":{"mode":"raw","raw":"{\"mentorId\":{{mentor1Id}},\"department\":\"Computer Science Updated\",\"academicRank\":\"MSc\"}"}},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(200);"]}}]}
+    ]},
+    {"name":"03 - Phases, criteria, rounds and round criteria","item":[
+      {"name":"PHASE-01 Create phase 1","request":{"method":"POST","header":[{"key":"Authorization","value":"Bearer {{adminToken}}"},{"key":"Content-Type","value":"application/json"}],"url":"{{baseUrl}}/api/internship_phases","body":{"mode":"raw","raw":"{\"phaseName\":\"QA Phase {{runId}}\",\"startDate\":\"2026-09-01\",\"endDate\":\"2026-12-31\",\"description\":\"QA phase\"}"}},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(201);","pm.collectionVariables.set('phase1Id', pm.response.json().data.phaseId);"]}}]},
+      {"name":"PHASE-01 Create phase 2","request":{"method":"POST","header":[{"key":"Authorization","value":"Bearer {{adminToken}}"},{"key":"Content-Type","value":"application/json"}],"url":"{{baseUrl}}/api/internship_phases","body":{"mode":"raw","raw":"{\"phaseName\":\"QA Phase 2 {{runId}}\",\"startDate\":\"2027-01-01\",\"endDate\":\"2027-03-31\",\"description\":\"QA phase 2\"}"}},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(201);","pm.collectionVariables.set('phase2Id', pm.response.json().data.phaseId);"]}}]},
+      {"name":"PHASE-02 Invalid phase dates","request":{"method":"POST","header":[{"key":"Authorization","value":"Bearer {{adminToken}}"},{"key":"Content-Type","value":"application/json"}],"url":"{{baseUrl}}/api/internship_phases","body":{"mode":"raw","raw":"{\"phaseName\":\"Invalid {{runId}}\",\"startDate\":\"2026-12-31\",\"endDate\":\"2026-09-01\"}"}},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(400);"]}}]},
+      {"name":"PHASE-04 Read phases as STUDENT","request":{"method":"GET","header":[{"key":"Authorization","value":"Bearer {{studentToken}}"}],"url":"{{baseUrl}}/api/internship_phases/{{phase1Id}}"},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(200);"]}}]},
+      {"name":"CRIT-01 Create criterion 1","request":{"method":"POST","header":[{"key":"Authorization","value":"Bearer {{adminToken}}"},{"key":"Content-Type","value":"application/json"}],"url":"{{baseUrl}}/api/evaluation_criteria","body":{"mode":"raw","raw":"{\"criterionName\":\"QA Technical {{runId}}\",\"description\":\"Technical delivery\",\"maxScore\":10}"}},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(201);","pm.collectionVariables.set('criterion1Id', pm.response.json().data.criterionId);"]}}]},
+      {"name":"CRIT-01 Create criterion 2","request":{"method":"POST","header":[{"key":"Authorization","value":"Bearer {{adminToken}}"},{"key":"Content-Type","value":"application/json"}],"url":"{{baseUrl}}/api/evaluation_criteria","body":{"mode":"raw","raw":"{\"criterionName\":\"QA Communication {{runId}}\",\"description\":\"Communication\",\"maxScore\":5}"}},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(201);","pm.collectionVariables.set('criterion2Id', pm.response.json().data.criterionId);"]}}]},
+      {"name":"CRIT-01 Create independent criterion 3","request":{"method":"POST","header":[{"key":"Authorization","value":"Bearer {{adminToken}}"},{"key":"Content-Type","value":"application/json"}],"url":"{{baseUrl}}/api/evaluation_criteria","body":{"mode":"raw","raw":"{\"criterionName\":\"QA Delete {{runId}}\",\"description\":\"Cleanup criterion\",\"maxScore\":1}"}},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(201);","pm.collectionVariables.set('criterion3Id', pm.response.json().data.criterionId);"]}}]},
+      {"name":"CRIT-02 Invalid max score","request":{"method":"POST","header":[{"key":"Authorization","value":"Bearer {{adminToken}}"},{"key":"Content-Type","value":"application/json"}],"url":"{{baseUrl}}/api/evaluation_criteria","body":{"mode":"raw","raw":"{\"criterionName\":\"Invalid {{runId}}\",\"maxScore\":0}"}},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(400);"]}}]},
+      {"name":"CRIT-04 Read criterion as MENTOR","request":{"method":"GET","header":[{"key":"Authorization","value":"Bearer {{mentorToken}}"}],"url":"{{baseUrl}}/api/evaluation_criteria/{{criterion1Id}}"},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(200);"]}}]},
+      {"name":"ROUND-01 Create round 1","request":{"method":"POST","header":[{"key":"Authorization","value":"Bearer {{adminToken}}"},{"key":"Content-Type","value":"application/json"}],"url":"{{baseUrl}}/api/assessment_rounds","body":{"mode":"raw","raw":"{\"phaseId\":{{phase1Id}},\"roundName\":\"QA Round {{runId}}\",\"startDate\":\"2026-12-01\",\"endDate\":\"2026-12-31\",\"description\":\"QA round\",\"criteria\":[{\"criterionId\":{{criterion1Id}},\"weight\":1}]}"}},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(201);","pm.collectionVariables.set('round1Id', pm.response.json().data.roundId);"]}}]},
+      {"name":"ROUND-01 Create round 2","request":{"method":"POST","header":[{"key":"Authorization","value":"Bearer {{adminToken}}"},{"key":"Content-Type","value":"application/json"}],"url":"{{baseUrl}}/api/assessment_rounds","body":{"mode":"raw","raw":"{\"phaseId\":{{phase2Id}},\"roundName\":\"QA Round 2 {{runId}}\",\"startDate\":\"2027-02-01\",\"endDate\":\"2027-03-01\",\"description\":\"Wrong phase test\",\"criteria\":[{\"criterionId\":{{criterion2Id}},\"weight\":1}]}"}},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(201);","pm.collectionVariables.set('round2Id', pm.response.json().data.roundId);"]}}]},
+      {"name":"ROUND-02 Invalid round dates","request":{"method":"POST","header":[{"key":"Authorization","value":"Bearer {{adminToken}}"},{"key":"Content-Type","value":"application/json"}],"url":"{{baseUrl}}/api/assessment_rounds","body":{"mode":"raw","raw":"{\"phaseId\":{{phase1Id}},\"roundName\":\"Invalid {{runId}}\",\"startDate\":\"2026-12-31\",\"endDate\":\"2026-12-01\"}"}},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(400);"]}}]},
+      {"name":"ROUND-05 Filter rounds by phase","request":{"method":"GET","header":[{"key":"Authorization","value":"Bearer {{studentToken}}"}],"url":"{{baseUrl}}/api/assessment_rounds?phase_id={{phase1Id}}"},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(200);","pm.response.json().data.forEach(x => pm.expect(x.phaseId).to.eql(+pm.collectionVariables.get('phase1Id')));"]}}]},
+      {"name":"RC-01 Find round criterion 1","request":{"method":"GET","header":[{"key":"Authorization","value":"Bearer {{adminToken}}"}],"url":"{{baseUrl}}/api/round_criteria?round_id={{round1Id}}"},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(200);","const rc = pm.response.json().data.find(x => x.criterionId === +pm.collectionVariables.get('criterion1Id'));","pm.collectionVariables.set('roundCriterion1Id', rc.roundCriterionId);"]}}]},
+      {"name":"RC-02 Add criterion 2 to round 1","request":{"method":"POST","header":[{"key":"Authorization","value":"Bearer {{adminToken}}"},{"key":"Content-Type","value":"application/json"}],"url":"{{baseUrl}}/api/round_criteria","body":{"mode":"raw","raw":"{\"roundId\":{{round1Id}},\"criterionId\":{{criterion2Id}},\"weight\":0.5}"}},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(201);","pm.collectionVariables.set('roundCriterion2Id', pm.response.json().data.roundCriterionId);"]}}]},
+      {"name":"RC-03 Duplicate round criterion","request":{"method":"POST","header":[{"key":"Authorization","value":"Bearer {{adminToken}}"},{"key":"Content-Type","value":"application/json"}],"url":"{{baseUrl}}/api/round_criteria","body":{"mode":"raw","raw":"{\"roundId\":{{round1Id}},\"criterionId\":{{criterion2Id}},\"weight\":1}"}},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(400);"]}}]},
+      {"name":"RC-04 Update round criterion weight","request":{"method":"PUT","header":[{"key":"Authorization","value":"Bearer {{adminToken}}"},{"key":"Content-Type","value":"application/json"}],"url":"{{baseUrl}}/api/round_criteria/{{roundCriterion2Id}}","body":{"mode":"raw","raw":"{\"roundId\":{{round1Id}},\"criterionId\":{{criterion2Id}},\"weight\":0.75}"}},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(200);"]}}]},
+      {"name":"RC-05 Cannot change round criterion relationship","request":{"method":"PUT","header":[{"key":"Authorization","value":"Bearer {{adminToken}}"},{"key":"Content-Type","value":"application/json"}],"url":"{{baseUrl}}/api/round_criteria/{{roundCriterion2Id}}","body":{"mode":"raw","raw":"{\"roundId\":{{round2Id}},\"criterionId\":{{criterion2Id}},\"weight\":1}"}},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(400);"]}}]}
+    ]},
+    {"name":"04 - Assignments and assessment results","item":[
+      {"name":"ASSIGN-01 Create assignment","request":{"method":"POST","header":[{"key":"Authorization","value":"Bearer {{adminToken}}"},{"key":"Content-Type","value":"application/json"}],"url":"{{baseUrl}}/api/internship_assignments","body":{"mode":"raw","raw":"{\"studentId\":{{student1Id}},\"mentorId\":{{mentor1Id}},\"phaseId\":{{phase1Id}}}"}},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(201);","pm.collectionVariables.set('assignment1Id', pm.response.json().data.assignmentId);","pm.expect(pm.response.json().data.status).to.eql('PENDING');"]}}]},
+      {"name":"ASSIGN-02 Duplicate assignment","request":{"method":"POST","header":[{"key":"Authorization","value":"Bearer {{adminToken}}"},{"key":"Content-Type","value":"application/json"}],"url":"{{baseUrl}}/api/internship_assignments","body":{"mode":"raw","raw":"{\"studentId\":{{student1Id}},\"mentorId\":{{mentor2Id}},\"phaseId\":{{phase1Id}}}"}},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(400);"]}}]},
+      {"name":"ASSIGN-04 Admin reads assignments","request":{"method":"GET","header":[{"key":"Authorization","value":"Bearer {{adminToken}}"}],"url":"{{baseUrl}}/api/internship_assignments"},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(200);"]}}]},
+      {"name":"ASSIGN-05 Mentor owner reads detail","request":{"method":"GET","header":[{"key":"Authorization","value":"Bearer {{mentorToken}}"}],"url":"{{baseUrl}}/api/internship_assignments/{{assignment1Id}}"},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(200);"]}}]},
+      {"name":"ASSIGN-06 Mentor_2 list excludes assignment","request":{"method":"GET","header":[{"key":"Authorization","value":"Bearer {{mentor2Token}}"}],"url":"{{baseUrl}}/api/internship_assignments"},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(200);","pm.expect(pm.response.json().data.map(x => x.assignmentId)).not.to.include(+pm.collectionVariables.get('assignment1Id'));"]}}]},
+      {"name":"ASSIGN-07 Student_2 cannot read assignment","request":{"method":"GET","header":[{"key":"Authorization","value":"Bearer {{student2Token}}"}],"url":"{{baseUrl}}/api/internship_assignments/{{assignment1Id}}"},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(403);"]}}]},
+      {"name":"ASSIGN-08 Update assignment status","request":{"method":"PUT","header":[{"key":"Authorization","value":"Bearer {{adminToken}}"},{"key":"Content-Type","value":"application/json"}],"url":"{{baseUrl}}/api/internship_assignments/{{assignment1Id}}/status","body":{"mode":"raw","raw":"{\"status\":\"IN_PROGRESS\"}"}},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(200);","pm.expect(pm.response.json().data.status).to.eql('IN_PROGRESS');"]}}]},
+      {"name":"ASSIGN-09 Invalid assignment status","request":{"method":"PUT","header":[{"key":"Authorization","value":"Bearer {{adminToken}}"},{"key":"Content-Type","value":"application/json"}],"url":"{{baseUrl}}/api/internship_assignments/{{assignment1Id}}/status","body":{"mode":"raw","raw":"{\"status\":\"INVALID\"}"}},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(400);"]}}]},
+      {"name":"RESULT-01 Mentor creates result","request":{"method":"POST","header":[{"key":"Authorization","value":"Bearer {{mentorToken}}"},{"key":"Content-Type","value":"application/json"}],"url":"{{baseUrl}}/api/assessment_results","body":{"mode":"raw","raw":"{\"assignmentId\":{{assignment1Id}},\"roundId\":{{round1Id}},\"criterionId\":{{criterion1Id}},\"score\":8.5,\"comments\":\"QA assessment\"}"}},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(201);","pm.collectionVariables.set('result1Id', pm.response.json().data.resultId);"]}}]},
+      {"name":"RESULT-02 Student reads own results","request":{"method":"GET","header":[{"key":"Authorization","value":"Bearer {{studentToken}}"}],"url":"{{baseUrl}}/api/assessment_results"},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(200);","pm.expect(pm.response.json().data.map(x => x.resultId)).to.include(+pm.collectionVariables.get('result1Id'));"]}}]},
+      {"name":"RESULT-03 Student_2 list excludes result","request":{"method":"GET","header":[{"key":"Authorization","value":"Bearer {{student2Token}}"}],"url":"{{baseUrl}}/api/assessment_results"},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(200);","pm.expect(pm.response.json().data.map(x => x.resultId)).not.to.include(+pm.collectionVariables.get('result1Id'));"]}}]},
+      {"name":"RESULT-04 Duplicate result","request":{"method":"POST","header":[{"key":"Authorization","value":"Bearer {{mentorToken}}"},{"key":"Content-Type","value":"application/json"}],"url":"{{baseUrl}}/api/assessment_results","body":{"mode":"raw","raw":"{\"assignmentId\":{{assignment1Id}},\"roundId\":{{round1Id}},\"criterionId\":{{criterion1Id}},\"score\":8.5}"}},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(400);"]}}]},
+      {"name":"RESULT-05 Mentor_2 cannot assess other assignment","request":{"method":"POST","header":[{"key":"Authorization","value":"Bearer {{mentor2Token}}"},{"key":"Content-Type","value":"application/json"}],"url":"{{baseUrl}}/api/assessment_results","body":{"mode":"raw","raw":"{\"assignmentId\":{{assignment1Id}},\"roundId\":{{round1Id}},\"criterionId\":{{criterion1Id}},\"score\":8.5}"}},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(403);"]}}]},
+      {"name":"RESULT-07 Score above maximum","request":{"method":"POST","header":[{"key":"Authorization","value":"Bearer {{mentorToken}}"},{"key":"Content-Type","value":"application/json"}],"url":"{{baseUrl}}/api/assessment_results","body":{"mode":"raw","raw":"{\"assignmentId\":{{assignment1Id}},\"roundId\":{{round1Id}},\"criterionId\":{{criterion2Id}},\"score\":6}"}},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(400);"]}}]},
+      {"name":"RESULT-09 Round from other phase","request":{"method":"POST","header":[{"key":"Authorization","value":"Bearer {{mentorToken}}"},{"key":"Content-Type","value":"application/json"}],"url":"{{baseUrl}}/api/assessment_results","body":{"mode":"raw","raw":"{\"assignmentId\":{{assignment1Id}},\"roundId\":{{round2Id}},\"criterionId\":{{criterion2Id}},\"score\":4}"}},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(400);"]}}]},
+      {"name":"RESULT-11 Mentor updates own result","request":{"method":"PUT","header":[{"key":"Authorization","value":"Bearer {{mentorToken}}"},{"key":"Content-Type","value":"application/json"}],"url":"{{baseUrl}}/api/assessment_results/{{result1Id}}","body":{"mode":"raw","raw":"{\"assignmentId\":{{assignment1Id}},\"roundId\":{{round1Id}},\"criterionId\":{{criterion1Id}},\"score\":9,\"comments\":\"Updated QA assessment\"}"}},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(200);","pm.expect(pm.response.json().data.score).to.eql(9);"]}}]},
+      {"name":"RESULT-12 Mentor_2 cannot update result","request":{"method":"PUT","header":[{"key":"Authorization","value":"Bearer {{mentor2Token}}"},{"key":"Content-Type","value":"application/json"}],"url":"{{baseUrl}}/api/assessment_results/{{result1Id}}","body":{"mode":"raw","raw":"{\"assignmentId\":{{assignment1Id}},\"roundId\":{{round1Id}},\"criterionId\":{{criterion1Id}},\"score\":9}"}},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(403);"]}}]},
+      {"name":"RESULT-14 Cannot change result relationship","request":{"method":"PUT","header":[{"key":"Authorization","value":"Bearer {{mentorToken}}"},{"key":"Content-Type","value":"application/json"}],"url":"{{baseUrl}}/api/assessment_results/{{result1Id}}","body":{"mode":"raw","raw":"{\"assignmentId\":{{assignment1Id}},\"roundId\":{{round1Id}},\"criterionId\":{{criterion2Id}},\"score\":4}"}},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(400);"]}}]}
+    ]},
+    {"name":"05 - Remaining endpoint coverage","item":[
+      {"name":"USER-04 Get user detail","request":{"method":"GET","header":[{"key":"Authorization","value":"Bearer {{adminToken}}"}],"url":"{{baseUrl}}/api/users/{{admin2Id}}"},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(200);"]}}]},
+      {"name":"USER-13 Create temporary user for DELETE","request":{"method":"POST","header":[{"key":"Authorization","value":"Bearer {{adminToken}}"},{"key":"Content-Type","value":"application/json"}],"url":"{{baseUrl}}/api/users","body":{"mode":"raw","raw":"{\"username\":\"QA_{{runId}}_DELETE\",\"password\":\"qa-password-delete\",\"fullName\":\"QA Delete\",\"email\":\"qa-{{runId}}-delete@example.test\",\"role\":\"STUDENT\"}"}},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(201);","pm.collectionVariables.set('temporaryUserId', pm.response.json().data.userId);"]}}]},
+      {"name":"USER-13 Delete temporary user","request":{"method":"DELETE","header":[{"key":"Authorization","value":"Bearer {{adminToken}}"}],"url":"{{baseUrl}}/api/users/{{temporaryUserId}}"},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(204);"]}}]},
+      {"name":"MENT-04 Get mentor detail","request":{"method":"GET","header":[{"key":"Authorization","value":"Bearer {{mentorToken}}"}],"url":"{{baseUrl}}/api/mentors/{{mentor1Id}}"},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(200);"]}}]},
+      {"name":"STU-09 Mentor gets student list","request":{"method":"GET","header":[{"key":"Authorization","value":"Bearer {{mentorToken}}"}],"url":"{{baseUrl}}/api/students"},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(200);"]}}]},
+      {"name":"PHASE-04 Get phase list","request":{"method":"GET","header":[{"key":"Authorization","value":"Bearer {{mentorToken}}"}],"url":"{{baseUrl}}/api/internship_phases"},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(200);"]}}]},
+      {"name":"PHASE-05 Update phase 2","request":{"method":"PUT","header":[{"key":"Authorization","value":"Bearer {{adminToken}}"},{"key":"Content-Type","value":"application/json"}],"url":"{{baseUrl}}/api/internship_phases/{{phase2Id}}","body":{"mode":"raw","raw":"{\"phaseName\":\"QA Phase 2 Updated {{runId}}\",\"startDate\":\"2027-01-01\",\"endDate\":\"2027-03-31\",\"description\":\"Updated\"}"}},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(200);"]}}]},
+      {"name":"PHASE-06 Create independent phase 3","request":{"method":"POST","header":[{"key":"Authorization","value":"Bearer {{adminToken}}"},{"key":"Content-Type","value":"application/json"}],"url":"{{baseUrl}}/api/internship_phases","body":{"mode":"raw","raw":"{\"phaseName\":\"QA Delete Phase {{runId}}\",\"startDate\":\"2028-01-01\",\"endDate\":\"2028-01-31\",\"description\":\"Cleanup\"}"}},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(201);","pm.collectionVariables.set('phase3Id', pm.response.json().data.phaseId);"]}}]},
+      {"name":"ROUND-06 Create independent round 3","request":{"method":"POST","header":[{"key":"Authorization","value":"Bearer {{adminToken}}"},{"key":"Content-Type","value":"application/json"}],"url":"{{baseUrl}}/api/assessment_rounds","body":{"mode":"raw","raw":"{\"phaseId\":{{phase3Id}},\"roundName\":\"QA Delete Round {{runId}}\",\"startDate\":\"2028-01-01\",\"endDate\":\"2028-01-31\",\"description\":\"Cleanup\",\"criteria\":[]}"}},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(201);","pm.collectionVariables.set('round3Id', pm.response.json().data.roundId);"]}}]},
+      {"name":"ROUND-06 Delete independent round 3","request":{"method":"DELETE","header":[{"key":"Authorization","value":"Bearer {{adminToken}}"}],"url":"{{baseUrl}}/api/assessment_rounds/{{round3Id}}"},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(204);"]}}]},
+      {"name":"PHASE-06 Delete independent phase 3","request":{"method":"DELETE","header":[{"key":"Authorization","value":"Bearer {{adminToken}}"}],"url":"{{baseUrl}}/api/internship_phases/{{phase3Id}}"},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(204);"]}}]},
+      {"name":"CRIT-04 Get criteria list","request":{"method":"GET","header":[{"key":"Authorization","value":"Bearer {{studentToken}}"}],"url":"{{baseUrl}}/api/evaluation_criteria"},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(200);"]}}]},
+      {"name":"CRIT-04 Update criterion 2","request":{"method":"PUT","header":[{"key":"Authorization","value":"Bearer {{adminToken}}"},{"key":"Content-Type","value":"application/json"}],"url":"{{baseUrl}}/api/evaluation_criteria/{{criterion2Id}}","body":{"mode":"raw","raw":"{\"criterionName\":\"QA Communication Updated {{runId}}\",\"description\":\"Updated\",\"maxScore\":5}"}},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(200);"]}}]},
+      {"name":"ROUND-05 Get all rounds","request":{"method":"GET","header":[{"key":"Authorization","value":"Bearer {{mentorToken}}"}],"url":"{{baseUrl}}/api/assessment_rounds"},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(200);"]}}]},
+      {"name":"ROUND-05 Get round detail","request":{"method":"GET","header":[{"key":"Authorization","value":"Bearer {{studentToken}}"}],"url":"{{baseUrl}}/api/assessment_rounds/{{round1Id}}"},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(200);"]}}]},
+      {"name":"ROUND-06 Update round 2","request":{"method":"PUT","header":[{"key":"Authorization","value":"Bearer {{adminToken}}"},{"key":"Content-Type","value":"application/json"}],"url":"{{baseUrl}}/api/assessment_rounds/{{round2Id}}","body":{"mode":"raw","raw":"{\"phaseId\":{{phase2Id}},\"roundName\":\"QA Round 2 Updated {{runId}}\",\"startDate\":\"2027-02-01\",\"endDate\":\"2027-03-01\",\"description\":\"Updated\",\"criteria\":[]}"}},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(200);"]}}]},
+      {"name":"RC-01 Get round criterion detail","request":{"method":"GET","header":[{"key":"Authorization","value":"Bearer {{studentToken}}"}],"url":"{{baseUrl}}/api/round_criteria/{{roundCriterion1Id}}"},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(200);"]}}]},
+      {"name":"RC-06 Delete round criterion 2","request":{"method":"DELETE","header":[{"key":"Authorization","value":"Bearer {{adminToken}}"}],"url":"{{baseUrl}}/api/round_criteria/{{roundCriterion2Id}}"},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(204);"]}}]},
+      {"name":"ASSIGN-05 Student owner reads detail","request":{"method":"GET","header":[{"key":"Authorization","value":"Bearer {{studentToken}}"}],"url":"{{baseUrl}}/api/internship_assignments/{{assignment1Id}}"},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(200);"]}}]},
+      {"name":"RESULT-02 Admin reads results","request":{"method":"GET","header":[{"key":"Authorization","value":"Bearer {{adminToken}}"}],"url":"{{baseUrl}}/api/assessment_results"},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(200);"]}}]}
+    ]},
+    {"name":"06 - Cross-cutting security, not found and cleanup","item":[
+      {"name":"SEC-01 Missing token","request":{"method":"GET","url":"{{baseUrl}}/api/internship_phases"},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(401);"]}}]},
+      {"name":"SEC-02 Invalid JWT","request":{"method":"GET","header":[{"key":"Authorization","value":"Bearer invalid-token"}],"url":"{{baseUrl}}/api/internship_phases"},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(401);","pm.expect(pm.response.json().errorCode).to.eql('INVALID_JWT_TOKEN');"]}}]},
+      {"name":"SEC-03 STUDENT cannot create phase","request":{"method":"POST","header":[{"key":"Authorization","value":"Bearer {{studentToken}}"},{"key":"Content-Type","value":"application/json"}],"url":"{{baseUrl}}/api/internship_phases","body":{"mode":"raw","raw":"{\"phaseName\":\"Forbidden\",\"startDate\":\"2026-01-01\",\"endDate\":\"2026-01-02\"}"}},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(403);"]}}]},
+      {"name":"NF-01 Missing phase","request":{"method":"GET","header":[{"key":"Authorization","value":"Bearer {{adminToken}}"}],"url":"{{baseUrl}}/api/internship_phases/2147483647"},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(404);"]}}]},
+      {"name":"DEL-03 Delete independent criterion","request":{"method":"DELETE","header":[{"key":"Authorization","value":"Bearer {{adminToken}}"}],"url":"{{baseUrl}}/api/evaluation_criteria/{{criterion3Id}}"},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(204);"]}}]},
+      {"name":"DEL-04 Confirm deleted criterion","request":{"method":"GET","header":[{"key":"Authorization","value":"Bearer {{adminToken}}"}],"url":"{{baseUrl}}/api/evaluation_criteria/{{criterion3Id}}"},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(404);"]}}]},
+      {"name":"USER-15 Missing user","request":{"method":"GET","header":[{"key":"Authorization","value":"Bearer {{adminToken}}"}],"url":"{{baseUrl}}/api/users/2147483647"},"event":[{"listen":"test","script":{"exec":["pm.response.to.have.status(404);"]}}]}
+    ]}
   ]
 }

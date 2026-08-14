@@ -72,7 +72,7 @@ Thứ tự an toàn: Auth & Users → Profiles → Phase & Criteria → Round & 
 | USER-07 | Tạo/cập nhật với password < 8, email sai, role sai, trường bắt buộc rỗng | `400`, `INVALID_INPUT_DATA` |
 | USER-08 | `PUT /api/users/{mentor2UserId}` đổi username/email/fullName/password | `200`; login bằng username + password mới thành công |
 | USER-09 | `PUT /api/users/{student2UserId}/status` `{ "isActive": false }`, sau đó login | Update `200`; login bị từ chối `401`; đổi lại `true` thì login `200` |
-| USER-10 | `PUT /api/users/{student2UserId}/role` đổi từ STUDENT sang MENTOR khi chưa có profile | `200`; role đổi đúng |
+| USER-10 | `PUT /api/users/{student2UserId}/role` đổi từ STUDENT sang MENTOR khi chưa có profile, sau đó đổi lại STUDENT | Cả hai request `200`; profile Student2 chỉ được tạo sau khi role đã trở lại STUDENT |
 | USER-11 | Tạo profile Student/Mentor rồi đổi role profile owner sang role khác | `403`, `ACCESS_DENIED` |
 | USER-12 | ADMIN đổi role của `ADMIN_2` | `403`, `ACCESS_DENIED` |
 | USER-13 | `DELETE /api/users/{temporaryUserId}` không có profile/phân công | `204`; `GET` lại trả `404` |
@@ -192,4 +192,4 @@ Chạy các ca sau sau khi hoàn tất phần 8. Đây là kiểm thử ràng bu
 4. Lưu Postman run/export và log có `IMS_REQUEST` cùng `TRACE_ID` cho các ca lỗi hoặc lỗi bất thường.
 5. Chụp kết quả PostgreSQL trước/sau cleanup để xác nhận không còn dữ liệu QA theo `runId`.
 
-Collection hiện có tại [internship-management-system.postman_collection.json](./internship-management-system.postman_collection.json) chỉ tự động hoá luồng happy path nền tảng. Dùng tài liệu này để thêm các request negative/authorization tương ứng hoặc chạy thủ công theo ID test case.
+Collection tại [internship-management-system.postman_collection.json](./internship-management-system.postman_collection.json) đã tự động hoá luồng setup, toàn bộ method/path, các ca JWT/RBAC/ownership/duplicate/ràng buộc chính và cleanup độc lập. Chạy folder theo thứ tự; các biến token và ID được lưu tự động. Các biến thể validation còn lại được giữ trong bảng test case để chạy thủ công khi cần mở rộng phạm vi dữ liệu biên.
