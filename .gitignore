@@ -1,5 +1,6 @@
 HELP.md
 /AGENTS.md
+/.superpowers/
 /docs/*
 !/docs/testing_scenario.md
 !/docs/internship-management-system.postman_collection.json
