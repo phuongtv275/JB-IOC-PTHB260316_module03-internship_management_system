@@ -3,10 +3,12 @@ package com.example.internshipmanagementsystem.controller;
 import com.example.internshipmanagementsystem.dto.request.EvaluationCriterionRequest;
 import com.example.internshipmanagementsystem.dto.response.ApiResponse;
 import com.example.internshipmanagementsystem.dto.response.EvaluationCriterionResponse;
+import com.example.internshipmanagementsystem.dto.response.PageResponse;
 import com.example.internshipmanagementsystem.service.EvaluationCriterionService;
 import jakarta.validation.Valid;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -28,10 +30,13 @@ public class EvaluationCriterionController {
 
   @GetMapping
   @PreAuthorize("hasAnyRole('ADMIN', 'MENTOR', 'STUDENT')")
-  public ResponseEntity<ApiResponse<List<EvaluationCriterionResponse>>> getCriteria() {
+  public ResponseEntity<ApiResponse<PageResponse<EvaluationCriterionResponse>>> getCriteria(
+      @PageableDefault(size = 5) Pageable pageable) {
     return ResponseEntity.ok(
         ApiResponse.success(
-            200, "Evaluation criteria retrieved", evaluationCriterionService.getCriteria()));
+            200,
+            "Evaluation criteria retrieved",
+            PageResponse.from(evaluationCriterionService.getCriteria(), pageable)));
   }
 
   @GetMapping("/{criterionId}")

@@ -2,11 +2,13 @@ package com.example.internshipmanagementsystem.controller;
 
 import com.example.internshipmanagementsystem.dto.request.StudentProfileRequest;
 import com.example.internshipmanagementsystem.dto.response.ApiResponse;
+import com.example.internshipmanagementsystem.dto.response.PageResponse;
 import com.example.internshipmanagementsystem.dto.response.StudentResponse;
 import com.example.internshipmanagementsystem.service.StudentService;
 import jakarta.validation.Valid;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -29,11 +31,14 @@ public class StudentController {
 
   @GetMapping
   @PreAuthorize("hasAnyRole('ADMIN', 'MENTOR')")
-  public ResponseEntity<ApiResponse<List<StudentResponse>>> getStudents(
-      @AuthenticationPrincipal UserDetails userDetails) {
+  public ResponseEntity<ApiResponse<PageResponse<StudentResponse>>> getStudents(
+      @AuthenticationPrincipal UserDetails userDetails,
+      @PageableDefault(size = 5) Pageable pageable) {
     return ResponseEntity.ok(
         ApiResponse.success(
-            200, "Students retrieved", studentService.getStudents(userDetails.getUsername())));
+            200,
+            "Students retrieved",
+            PageResponse.from(studentService.getStudents(userDetails.getUsername()), pageable)));
   }
 
   @GetMapping("/{studentId}")
