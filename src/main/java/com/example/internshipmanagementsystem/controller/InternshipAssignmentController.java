@@ -4,12 +4,10 @@ import com.example.internshipmanagementsystem.dto.request.AssignmentStatusReques
 import com.example.internshipmanagementsystem.dto.request.InternshipAssignmentRequest;
 import com.example.internshipmanagementsystem.dto.response.ApiResponse;
 import com.example.internshipmanagementsystem.dto.response.InternshipAssignmentResponse;
-import com.example.internshipmanagementsystem.dto.response.PageResponse;
 import com.example.internshipmanagementsystem.service.InternshipAssignmentService;
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -32,15 +30,13 @@ public class InternshipAssignmentController {
 
   @GetMapping
   @PreAuthorize("hasAnyRole('ADMIN', 'MENTOR', 'STUDENT')")
-  public ResponseEntity<ApiResponse<PageResponse<InternshipAssignmentResponse>>> getAssignments(
-      @AuthenticationPrincipal UserDetails userDetails,
-      @PageableDefault(size = 5) Pageable pageable) {
+  public ResponseEntity<ApiResponse<List<InternshipAssignmentResponse>>> getAssignments(
+      @AuthenticationPrincipal UserDetails userDetails) {
     return ResponseEntity.ok(
         ApiResponse.success(
             200,
             "Internship assignments retrieved",
-            PageResponse.from(
-                internshipAssignmentService.getAssignments(userDetails.getUsername()), pageable)));
+            internshipAssignmentService.getAssignments(userDetails.getUsername())));
   }
 
   @GetMapping("/{assignmentId}")

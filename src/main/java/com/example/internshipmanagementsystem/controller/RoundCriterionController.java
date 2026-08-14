@@ -2,13 +2,11 @@ package com.example.internshipmanagementsystem.controller;
 
 import com.example.internshipmanagementsystem.dto.request.RoundCriterionRequest;
 import com.example.internshipmanagementsystem.dto.response.ApiResponse;
-import com.example.internshipmanagementsystem.dto.response.PageResponse;
 import com.example.internshipmanagementsystem.dto.response.RoundCriterionResponse;
 import com.example.internshipmanagementsystem.service.RoundCriterionService;
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -31,14 +29,11 @@ public class RoundCriterionController {
 
   @GetMapping
   @PreAuthorize("hasAnyRole('ADMIN', 'MENTOR', 'STUDENT')")
-  public ResponseEntity<ApiResponse<PageResponse<RoundCriterionResponse>>> getRoundCriteria(
-      @RequestParam(name = "round_id", required = false) Integer roundId,
-      @PageableDefault(size = 5) Pageable pageable) {
+  public ResponseEntity<ApiResponse<List<RoundCriterionResponse>>> getRoundCriteria(
+      @RequestParam(name = "round_id", required = false) Integer roundId) {
     return ResponseEntity.ok(
         ApiResponse.success(
-            200,
-            "Round criteria retrieved",
-            PageResponse.from(roundCriterionService.getRoundCriteria(roundId), pageable)));
+            200, "Round criteria retrieved", roundCriterionService.getRoundCriteria(roundId)));
   }
 
   @GetMapping("/{roundCriterionId}")

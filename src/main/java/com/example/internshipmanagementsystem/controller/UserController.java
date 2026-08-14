@@ -5,14 +5,12 @@ import com.example.internshipmanagementsystem.dto.request.ChangeStatusRequest;
 import com.example.internshipmanagementsystem.dto.request.CreateUserRequest;
 import com.example.internshipmanagementsystem.dto.request.UpdateUserRequest;
 import com.example.internshipmanagementsystem.dto.response.ApiResponse;
-import com.example.internshipmanagementsystem.dto.response.PageResponse;
 import com.example.internshipmanagementsystem.dto.response.UserResponse;
 import com.example.internshipmanagementsystem.entity.Role;
 import com.example.internshipmanagementsystem.service.UserService;
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -37,11 +35,10 @@ public class UserController {
   private final UserService userService;
 
   @GetMapping
-  public ResponseEntity<ApiResponse<PageResponse<UserResponse>>> getUsers(
-      @RequestParam(required = false) Role role, @PageableDefault(size = 5) Pageable pageable) {
+  public ResponseEntity<ApiResponse<List<UserResponse>>> getUsers(
+      @RequestParam(required = false) Role role) {
     return ResponseEntity.ok(
-        ApiResponse.success(
-            200, "Users retrieved", PageResponse.from(userService.getUsers(role), pageable)));
+        ApiResponse.success(200, "Users retrieved", userService.getUsers(role)));
   }
 
   @GetMapping("/{userId}")
