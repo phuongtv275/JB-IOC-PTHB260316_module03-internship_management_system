@@ -67,7 +67,6 @@ Chỉ dùng các tài khoản này ở môi trường development/demo. Tài kho
 
 ## API và kiểm thử
 
-- API contract: [docs/openapi.yaml](docs/openapi.yaml)
 - Kịch bản kiểm thử: [docs/testing_scenario.md](docs/testing_scenario.md)
 - Postman collection: [docs/internship-management-system.postman_collection.json](docs/internship-management-system.postman_collection.json)
 
@@ -82,8 +81,3 @@ Import collection vào Postman, đặt `baseUrl` nếu cần, rồi chạy các 
 ## Logging
 
 Log ứng dụng có prefix `IMS_` và `traceId` để liên kết các log của cùng request. Access log không ghi token, query string, mật khẩu hay dữ liệu cá nhân.
-
-## Tài liệu bổ sung
-
-- [SRS](docs/srs.md)
-- [Báo cáo thay đổi](docs/implementation-report.md)

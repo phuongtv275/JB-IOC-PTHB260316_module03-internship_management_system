@@ -1,4 +1,8 @@
 HELP.md
+/AGENTS.md
+/docs/*
+!/docs/testing_scenario.md
+!/docs/internship-management-system.postman_collection.json
 target/
 .mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
