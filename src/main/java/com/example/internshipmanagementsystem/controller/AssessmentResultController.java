@@ -3,10 +3,12 @@ package com.example.internshipmanagementsystem.controller;
 import com.example.internshipmanagementsystem.dto.request.AssessmentResultRequest;
 import com.example.internshipmanagementsystem.dto.response.ApiResponse;
 import com.example.internshipmanagementsystem.dto.response.AssessmentResultResponse;
+import com.example.internshipmanagementsystem.dto.response.PageResponse;
 import com.example.internshipmanagementsystem.service.AssessmentResultService;
 import jakarta.validation.Valid;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -29,13 +31,14 @@ public class AssessmentResultController {
 
   @GetMapping
   @PreAuthorize("hasAnyRole('ADMIN', 'MENTOR', 'STUDENT')")
-  public ResponseEntity<ApiResponse<List<AssessmentResultResponse>>> getResults(
-      @AuthenticationPrincipal UserDetails userDetails) {
+  public ResponseEntity<ApiResponse<PageResponse<AssessmentResultResponse>>> getResults(
+      @AuthenticationPrincipal UserDetails userDetails,
+      @PageableDefault(size = 5) Pageable pageable) {
     return ResponseEntity.ok(
         ApiResponse.success(
             200,
             "Assessment results retrieved",
-            assessmentResultService.getResults(userDetails.getUsername())));
+            assessmentResultService.getResults(userDetails.getUsername(), pageable)));
   }
 
   @PostMapping

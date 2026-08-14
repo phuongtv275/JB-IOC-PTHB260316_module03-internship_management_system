@@ -2,6 +2,7 @@ package com.example.internshipmanagementsystem.service.impl;
 
 import com.example.internshipmanagementsystem.dto.request.InternshipAssignmentRequest;
 import com.example.internshipmanagementsystem.dto.response.InternshipAssignmentResponse;
+import com.example.internshipmanagementsystem.dto.response.PageResponse;
 import com.example.internshipmanagementsystem.entity.AssignmentStatus;
 import com.example.internshipmanagementsystem.entity.InternshipAssignment;
 import com.example.internshipmanagementsystem.entity.InternshipPhase;
@@ -19,9 +20,10 @@ import com.example.internshipmanagementsystem.repository.MentorRepository;
 import com.example.internshipmanagementsystem.repository.StudentRepository;
 import com.example.internshipmanagementsystem.repository.UserRepository;
 import com.example.internshipmanagementsystem.service.InternshipAssignmentService;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,15 +41,18 @@ public class InternshipAssignmentServiceImpl implements InternshipAssignmentServ
   private final InternshipAssignmentMapper internshipAssignmentMapper;
 
   @Override
-  public List<InternshipAssignmentResponse> getAssignments(String actorUsername) {
+  public PageResponse<InternshipAssignmentResponse> getAssignments(
+      String actorUsername, Pageable pageable) {
     User actor = findUser(actorUsername);
-    List<InternshipAssignment> assignments =
+    Page<InternshipAssignment> assignments =
         switch (actor.getRole()) {
-          case ADMIN -> internshipAssignmentRepository.findAll();
-          case MENTOR -> internshipAssignmentRepository.findByMentorUserUsername(actorUsername);
-          case STUDENT -> internshipAssignmentRepository.findByStudentUserUsername(actorUsername);
+          case ADMIN -> internshipAssignmentRepository.findAll(pageable);
+          case MENTOR ->
+              internshipAssignmentRepository.findByMentorUserUsername(actorUsername, pageable);
+          case STUDENT ->
+              internshipAssignmentRepository.findByStudentUserUsername(actorUsername, pageable);
         };
-    return assignments.stream().map(internshipAssignmentMapper::toResponse).toList();
+    return PageResponse.from(assignments.map(internshipAssignmentMapper::toResponse));
   }
 
   @Override

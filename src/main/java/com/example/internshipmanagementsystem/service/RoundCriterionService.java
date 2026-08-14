@@ -1,12 +1,13 @@
 package com.example.internshipmanagementsystem.service;
 
 import com.example.internshipmanagementsystem.dto.request.RoundCriterionRequest;
+import com.example.internshipmanagementsystem.dto.response.PageResponse;
 import com.example.internshipmanagementsystem.dto.response.RoundCriterionResponse;
-import java.util.List;
+import org.springframework.data.domain.Pageable;
 
 public interface RoundCriterionService {
 
-  List<RoundCriterionResponse> getRoundCriteria(Integer roundId);
+  PageResponse<RoundCriterionResponse> getRoundCriteria(Integer roundId, Pageable pageable);
 
   RoundCriterionResponse getRoundCriterion(Integer roundCriterionId);
 

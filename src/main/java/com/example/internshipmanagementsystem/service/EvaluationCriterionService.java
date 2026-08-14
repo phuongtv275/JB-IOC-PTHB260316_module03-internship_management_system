@@ -2,11 +2,12 @@ package com.example.internshipmanagementsystem.service;
 
 import com.example.internshipmanagementsystem.dto.request.EvaluationCriterionRequest;
 import com.example.internshipmanagementsystem.dto.response.EvaluationCriterionResponse;
-import java.util.List;
+import com.example.internshipmanagementsystem.dto.response.PageResponse;
+import org.springframework.data.domain.Pageable;
 
 public interface EvaluationCriterionService {
 
-  List<EvaluationCriterionResponse> getCriteria();
+  PageResponse<EvaluationCriterionResponse> getCriteria(Pageable pageable);
 
   EvaluationCriterionResponse getCriterion(Integer criterionId);
 

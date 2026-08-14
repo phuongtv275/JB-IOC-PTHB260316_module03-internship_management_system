@@ -1,10 +1,11 @@
 package com.example.internshipmanagementsystem.repository;
 
 import com.example.internshipmanagementsystem.entity.AssessmentRound;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface AssessmentRoundRepository extends JpaRepository<AssessmentRound, Integer> {
 
-  List<AssessmentRound> findByPhasePhaseId(Integer phaseId);
+  Page<AssessmentRound> findByPhasePhaseId(Integer phaseId, Pageable pageable);
 }

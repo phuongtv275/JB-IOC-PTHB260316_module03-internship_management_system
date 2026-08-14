@@ -2,6 +2,7 @@ package com.example.internshipmanagementsystem.service.impl;
 
 import com.example.internshipmanagementsystem.dto.request.EvaluationCriterionRequest;
 import com.example.internshipmanagementsystem.dto.response.EvaluationCriterionResponse;
+import com.example.internshipmanagementsystem.dto.response.PageResponse;
 import com.example.internshipmanagementsystem.entity.EvaluationCriterion;
 import com.example.internshipmanagementsystem.exception.DuplicateResourceException;
 import com.example.internshipmanagementsystem.exception.InvalidEvaluationCriterionException;
@@ -10,8 +11,8 @@ import com.example.internshipmanagementsystem.mapper.EvaluationCriterionMapper;
 import com.example.internshipmanagementsystem.repository.EvaluationCriterionRepository;
 import com.example.internshipmanagementsystem.service.EvaluationCriterionService;
 import java.math.BigDecimal;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,10 +25,9 @@ public class EvaluationCriterionServiceImpl implements EvaluationCriterionServic
   private final EvaluationCriterionMapper evaluationCriterionMapper;
 
   @Override
-  public List<EvaluationCriterionResponse> getCriteria() {
-    return evaluationCriterionRepository.findAll().stream()
-        .map(evaluationCriterionMapper::toResponse)
-        .toList();
+  public PageResponse<EvaluationCriterionResponse> getCriteria(Pageable pageable) {
+    return PageResponse.from(
+        evaluationCriterionRepository.findAll(pageable).map(evaluationCriterionMapper::toResponse));
   }
 
   @Override

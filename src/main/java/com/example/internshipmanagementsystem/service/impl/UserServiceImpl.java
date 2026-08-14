@@ -4,6 +4,7 @@ import com.example.internshipmanagementsystem.dto.request.ChangeRoleRequest;
 import com.example.internshipmanagementsystem.dto.request.ChangeStatusRequest;
 import com.example.internshipmanagementsystem.dto.request.CreateUserRequest;
 import com.example.internshipmanagementsystem.dto.request.UpdateUserRequest;
+import com.example.internshipmanagementsystem.dto.response.PageResponse;
 import com.example.internshipmanagementsystem.dto.response.UserResponse;
 import com.example.internshipmanagementsystem.entity.Role;
 import com.example.internshipmanagementsystem.entity.User;
@@ -15,9 +16,10 @@ import com.example.internshipmanagementsystem.repository.MentorRepository;
 import com.example.internshipmanagementsystem.repository.StudentRepository;
 import com.example.internshipmanagementsystem.repository.UserRepository;
 import com.example.internshipmanagementsystem.service.UserService;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,9 +37,10 @@ public class UserServiceImpl implements UserService {
   private final UserMapper userMapper;
 
   @Override
-  public List<UserResponse> getUsers(Role role) {
-    List<User> users = role == null ? userRepository.findAll() : userRepository.findByRole(role);
-    return users.stream().map(userMapper::toResponse).toList();
+  public PageResponse<UserResponse> getUsers(Role role, Pageable pageable) {
+    Page<User> users =
+        role == null ? userRepository.findAll(pageable) : userRepository.findByRole(role, pageable);
+    return PageResponse.from(users.map(userMapper::toResponse));
   }
 
   @Override

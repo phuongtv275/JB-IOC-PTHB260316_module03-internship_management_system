@@ -2,11 +2,12 @@ package com.example.internshipmanagementsystem.service;
 
 import com.example.internshipmanagementsystem.dto.request.InternshipPhaseRequest;
 import com.example.internshipmanagementsystem.dto.response.InternshipPhaseResponse;
-import java.util.List;
+import com.example.internshipmanagementsystem.dto.response.PageResponse;
+import org.springframework.data.domain.Pageable;
 
 public interface InternshipPhaseService {
 
-  List<InternshipPhaseResponse> getPhases();
+  PageResponse<InternshipPhaseResponse> getPhases(Pageable pageable);
 
   InternshipPhaseResponse getPhase(Integer phaseId);
 

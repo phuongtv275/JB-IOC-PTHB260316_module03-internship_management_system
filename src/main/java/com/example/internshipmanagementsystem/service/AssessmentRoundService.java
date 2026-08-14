@@ -2,11 +2,12 @@ package com.example.internshipmanagementsystem.service;
 
 import com.example.internshipmanagementsystem.dto.request.AssessmentRoundRequest;
 import com.example.internshipmanagementsystem.dto.response.AssessmentRoundResponse;
-import java.util.List;
+import com.example.internshipmanagementsystem.dto.response.PageResponse;
+import org.springframework.data.domain.Pageable;
 
 public interface AssessmentRoundService {
 
-  List<AssessmentRoundResponse> getRounds(Integer phaseId);
+  PageResponse<AssessmentRoundResponse> getRounds(Integer phaseId, Pageable pageable);
 
   AssessmentRoundResponse getRound(Integer roundId);
 

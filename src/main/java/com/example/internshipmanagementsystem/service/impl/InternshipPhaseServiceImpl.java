@@ -2,6 +2,7 @@ package com.example.internshipmanagementsystem.service.impl;
 
 import com.example.internshipmanagementsystem.dto.request.InternshipPhaseRequest;
 import com.example.internshipmanagementsystem.dto.response.InternshipPhaseResponse;
+import com.example.internshipmanagementsystem.dto.response.PageResponse;
 import com.example.internshipmanagementsystem.entity.InternshipPhase;
 import com.example.internshipmanagementsystem.exception.DuplicateResourceException;
 import com.example.internshipmanagementsystem.exception.InvalidInternshipPhaseException;
@@ -10,8 +11,8 @@ import com.example.internshipmanagementsystem.mapper.InternshipPhaseMapper;
 import com.example.internshipmanagementsystem.repository.InternshipPhaseRepository;
 import com.example.internshipmanagementsystem.service.InternshipPhaseService;
 import java.time.LocalDate;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,10 +25,9 @@ public class InternshipPhaseServiceImpl implements InternshipPhaseService {
   private final InternshipPhaseMapper internshipPhaseMapper;
 
   @Override
-  public List<InternshipPhaseResponse> getPhases() {
-    return internshipPhaseRepository.findAll().stream()
-        .map(internshipPhaseMapper::toResponse)
-        .toList();
+  public PageResponse<InternshipPhaseResponse> getPhases(Pageable pageable) {
+    return PageResponse.from(
+        internshipPhaseRepository.findAll(pageable).map(internshipPhaseMapper::toResponse));
   }
 
   @Override

@@ -1,11 +1,14 @@
 package com.example.internshipmanagementsystem.controller;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.example.internshipmanagementsystem.dto.response.PageResponse;
 import com.example.internshipmanagementsystem.dto.response.UserResponse;
 import com.example.internshipmanagementsystem.entity.Role;
 import com.example.internshipmanagementsystem.security.JwtAuthenticationFilter;
@@ -16,6 +19,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -42,12 +46,15 @@ class UserControllerTest {
             true,
             LocalDateTime.now(),
             LocalDateTime.now());
-    when(userService.getUsers(null)).thenReturn(List.of(user));
+    when(userService.getUsers(eq(null), any(Pageable.class)))
+        .thenReturn(new PageResponse<>(List.of(user), 0, 5, 1, 1, true, true));
 
     mockMvc
         .perform(get("/api/users"))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.data[0].username").value("student"));
+        .andExpect(jsonPath("$.data.content[0].username").value("student"))
+        .andExpect(jsonPath("$.data.page").value(0))
+        .andExpect(jsonPath("$.data.size").value(5));
   }
 
   @Test
