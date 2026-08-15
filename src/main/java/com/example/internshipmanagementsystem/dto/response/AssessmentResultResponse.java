@@ -5,10 +5,10 @@ import java.time.LocalDateTime;
 
 public record AssessmentResultResponse(
     Integer resultId,
-    Integer assignmentId,
-    Integer roundId,
-    Integer criterionId,
+    InternshipAssignmentSummaryResponse assignment,
+    RoundReference round,
+    CriterionReference criterion,
     BigDecimal score,
     String comments,
-    Integer evaluatedBy,
+    UserSummaryResponse evaluator,
     LocalDateTime evaluationDate) {}

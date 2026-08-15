@@ -2,7 +2,7 @@ package com.example.internshipmanagementsystem.service.impl;
 
 import com.example.internshipmanagementsystem.dto.request.RoundCriterionRequest;
 import com.example.internshipmanagementsystem.dto.response.PageResponse;
-import com.example.internshipmanagementsystem.dto.response.RoundCriterionResponse;
+import com.example.internshipmanagementsystem.dto.response.RoundCriterionDetailResponse;
 import com.example.internshipmanagementsystem.entity.AssessmentRound;
 import com.example.internshipmanagementsystem.entity.EvaluationCriterion;
 import com.example.internshipmanagementsystem.entity.RoundCriterion;
@@ -31,22 +31,23 @@ public class RoundCriterionServiceImpl implements RoundCriterionService {
   private final RoundCriterionMapper roundCriterionMapper;
 
   @Override
-  public PageResponse<RoundCriterionResponse> getRoundCriteria(Integer roundId, Pageable pageable) {
+  public PageResponse<RoundCriterionDetailResponse> getRoundCriteria(
+      Integer roundId, Pageable pageable) {
     Page<RoundCriterion> criteria =
         roundId == null
             ? roundCriterionRepository.findAll(pageable)
             : roundCriterionRepository.findByRoundRoundId(roundId, pageable);
-    return PageResponse.from(criteria.map(roundCriterionMapper::toResponse));
+    return PageResponse.from(criteria.map(roundCriterionMapper::toDetailResponse));
   }
 
   @Override
-  public RoundCriterionResponse getRoundCriterion(Integer roundCriterionId) {
-    return roundCriterionMapper.toResponse(findRoundCriterion(roundCriterionId));
+  public RoundCriterionDetailResponse getRoundCriterion(Integer roundCriterionId) {
+    return roundCriterionMapper.toDetailResponse(findRoundCriterion(roundCriterionId));
   }
 
   @Override
   @Transactional
-  public RoundCriterionResponse createRoundCriterion(RoundCriterionRequest request) {
+  public RoundCriterionDetailResponse createRoundCriterion(RoundCriterionRequest request) {
     if (roundCriterionRepository.existsByRoundRoundIdAndCriterionCriterionId(
         request.roundId(), request.criterionId())) {
       throw new DuplicateResourceException("Criterion is already in the assessment round");
@@ -54,12 +55,12 @@ public class RoundCriterionServiceImpl implements RoundCriterionService {
     RoundCriterion roundCriterion =
         RoundCriterion.create(
             findRound(request.roundId()), findCriterion(request.criterionId()), request.weight());
-    return roundCriterionMapper.toResponse(roundCriterionRepository.save(roundCriterion));
+    return roundCriterionMapper.toDetailResponse(roundCriterionRepository.save(roundCriterion));
   }
 
   @Override
   @Transactional
-  public RoundCriterionResponse updateRoundCriterion(
+  public RoundCriterionDetailResponse updateRoundCriterion(
       Integer roundCriterionId, RoundCriterionRequest request) {
     RoundCriterion roundCriterion = findRoundCriterion(roundCriterionId);
     if (!roundCriterion.getRound().getRoundId().equals(request.roundId())
@@ -67,7 +68,7 @@ public class RoundCriterionServiceImpl implements RoundCriterionService {
       throw new InvalidAssessmentRoundException("Round criterion relationship cannot be changed");
     }
     roundCriterion.update(request.weight());
-    return roundCriterionMapper.toResponse(roundCriterion);
+    return roundCriterionMapper.toDetailResponse(roundCriterion);
   }
 
   @Override
