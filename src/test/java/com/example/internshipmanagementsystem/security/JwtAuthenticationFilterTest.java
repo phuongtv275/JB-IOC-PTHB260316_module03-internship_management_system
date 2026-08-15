@@ -39,7 +39,8 @@ class JwtAuthenticationFilterTest {
     filter.doFilter(request, response, filterChain);
 
     assertThat(SecurityContextHolder.getContext().getAuthentication()).isNull();
-    assertThat(request.getAttribute(JwtAuthenticationFilter.JWT_ERROR_ATTRIBUTE)).isEqualTo(true);
+    assertThat(request.getAttribute(JwtAuthenticationFilter.ACCOUNT_DISABLED_ATTRIBUTE))
+        .isEqualTo(true);
     verify(filterChain).doFilter(request, response);
   }
 }

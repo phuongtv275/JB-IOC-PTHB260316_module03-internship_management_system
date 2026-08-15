@@ -50,7 +50,8 @@ class UserControllerTest {
             LocalDateTime.now(),
             LocalDateTime.now());
     when(userService.getUsers(eq(null), any(Pageable.class)))
-        .thenReturn(new PageResponse<>(List.of(user), 0, 5, 1, 1, true, true));
+        .thenReturn(
+            new PageResponse<>(List.of(user), 0, 5, 1, 1, true, true, List.of("userId,asc")));
 
     mockMvc
         .perform(get("/api/users"))
@@ -85,7 +86,7 @@ class UserControllerTest {
   @Test
   void shouldApplyStableSortAndMaximumSize_whenUsersAreRequested() throws Exception {
     when(userService.getUsers(eq(null), any(Pageable.class)))
-        .thenReturn(new PageResponse<>(List.of(), 0, 100, 0, 0, true, true));
+        .thenReturn(new PageResponse<>(List.of(), 0, 100, 0, 0, true, true, List.of("userId,asc")));
 
     mockMvc.perform(get("/api/users").param("size", "1000")).andExpect(status().isOk());
 

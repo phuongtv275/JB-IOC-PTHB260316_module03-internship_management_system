@@ -24,14 +24,21 @@ public class ApiAuthenticationEntryPoint implements AuthenticationEntryPoint {
       throws IOException {
     boolean invalidToken =
         request.getAttribute(JwtAuthenticationFilter.JWT_ERROR_ATTRIBUTE) != null;
-    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+    boolean accountDisabled =
+        request.getAttribute(JwtAuthenticationFilter.ACCOUNT_DISABLED_ATTRIBUTE) != null;
+    response.setStatus(
+        accountDisabled ? HttpServletResponse.SC_FORBIDDEN : HttpServletResponse.SC_UNAUTHORIZED);
     response.setContentType(MediaType.APPLICATION_JSON_VALUE);
     objectMapper.writeValue(
         response.getOutputStream(),
         ErrorResponse.of(
-            401,
-            invalidToken ? "INVALID_JWT_TOKEN" : "BAD_CREDENTIALS",
-            "Unauthorized",
+            accountDisabled ? 403 : 401,
+            accountDisabled
+                ? "ACCOUNT_DISABLED"
+                : invalidToken ? "INVALID_JWT_TOKEN" : "BAD_CREDENTIALS",
+            accountDisabled
+                ? "Tài khoản hiện tại đã bị vô hiệu hóa. Liên hệ với mentor hoặc quản lý nhân sự để kích hoạt lại tài khoản"
+                : "Unauthorized",
             List.of()));
   }
 }

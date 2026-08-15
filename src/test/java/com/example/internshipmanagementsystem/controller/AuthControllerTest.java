@@ -52,7 +52,7 @@ class AuthControllerTest {
             post("/api/auth/login")
                 .contentType("application/json")
                 .content("{\"username\":\"inactive\",\"password\":\"password\"}"))
-        .andExpect(status().isUnauthorized())
+        .andExpect(status().isForbidden())
         .andExpect(jsonPath("$.errorCode").value("ACCOUNT_DISABLED"))
         .andExpect(
             jsonPath("$.message")
