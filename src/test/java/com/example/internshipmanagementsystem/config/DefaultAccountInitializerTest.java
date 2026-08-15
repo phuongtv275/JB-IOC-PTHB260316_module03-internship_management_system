@@ -16,6 +16,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.DefaultApplicationArguments;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @ExtendWith(MockitoExtension.class)
@@ -24,6 +25,13 @@ class DefaultAccountInitializerTest {
   @Mock private UserRepository userRepository;
   @Mock private PasswordEncoder passwordEncoder;
   @InjectMocks private DefaultAccountInitializer defaultAccountInitializer;
+
+  @Test
+  void shouldNotRegisterDefaultAccountInitializer_whenProductionProfileIsActive() {
+    Profile profile = DefaultAccountInitializer.class.getAnnotation(Profile.class);
+
+    assertThat(profile.value()).containsExactly("!prod");
+  }
 
   @Test
   void shouldCreateMissingDefaultAccounts_whenApplicationStarts() throws Exception {
