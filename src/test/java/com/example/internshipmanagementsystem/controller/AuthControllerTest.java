@@ -7,6 +7,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.example.internshipmanagementsystem.dto.response.LoginResponse;
+import com.example.internshipmanagementsystem.dto.response.UserSummaryResponse;
+import com.example.internshipmanagementsystem.entity.Role;
 import com.example.internshipmanagementsystem.security.JwtAuthenticationFilter;
 import com.example.internshipmanagementsystem.service.AuthService;
 import com.example.internshipmanagementsystem.service.UserService;
@@ -32,7 +34,10 @@ class AuthControllerTest {
 
   @Test
   void shouldReturnToken_whenLoginRequestIsValid() throws Exception {
-    when(authService.login(any())).thenReturn(new LoginResponse("token", "Bearer"));
+    when(authService.login(any()))
+        .thenReturn(
+            new LoginResponse(
+                "token", "Bearer", new UserSummaryResponse(1, "admin", "Admin", Role.ADMIN, true)));
 
     mockMvc
         .perform(

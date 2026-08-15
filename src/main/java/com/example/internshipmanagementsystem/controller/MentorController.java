@@ -2,7 +2,8 @@ package com.example.internshipmanagementsystem.controller;
 
 import com.example.internshipmanagementsystem.dto.request.MentorProfileRequest;
 import com.example.internshipmanagementsystem.dto.response.ApiResponse;
-import com.example.internshipmanagementsystem.dto.response.MentorResponse;
+import com.example.internshipmanagementsystem.dto.response.MentorDetailResponse;
+import com.example.internshipmanagementsystem.dto.response.MentorSummaryResponse;
 import com.example.internshipmanagementsystem.dto.response.PageResponse;
 import com.example.internshipmanagementsystem.service.MentorService;
 import jakarta.validation.Valid;
@@ -31,7 +32,7 @@ public class MentorController {
 
   @GetMapping
   @PreAuthorize("hasAnyRole('ADMIN', 'STUDENT')")
-  public ResponseEntity<ApiResponse<PageResponse<MentorResponse>>> getMentors(
+  public ResponseEntity<ApiResponse<PageResponse<MentorSummaryResponse>>> getMentors(
       @PageableDefault(size = 5, sort = "mentorId") Pageable pageable) {
     return ResponseEntity.ok(
         ApiResponse.success(200, "Mentors retrieved", mentorService.getMentors(pageable)));
@@ -39,7 +40,7 @@ public class MentorController {
 
   @GetMapping("/{mentorId}")
   @PreAuthorize("hasAnyRole('ADMIN', 'MENTOR', 'STUDENT')")
-  public ResponseEntity<ApiResponse<MentorResponse>> getMentor(
+  public ResponseEntity<ApiResponse<MentorDetailResponse>> getMentor(
       @PathVariable Integer mentorId, @AuthenticationPrincipal UserDetails userDetails) {
     return ResponseEntity.ok(
         ApiResponse.success(
@@ -48,7 +49,7 @@ public class MentorController {
 
   @PostMapping
   @PreAuthorize("hasRole('ADMIN')")
-  public ResponseEntity<ApiResponse<MentorResponse>> createMentor(
+  public ResponseEntity<ApiResponse<MentorDetailResponse>> createMentor(
       @Valid @RequestBody MentorProfileRequest request) {
     return ResponseEntity.status(HttpStatus.CREATED)
         .body(ApiResponse.success(201, "Mentor created", mentorService.createMentor(request)));
@@ -56,7 +57,7 @@ public class MentorController {
 
   @PutMapping("/{mentorId}")
   @PreAuthorize("hasAnyRole('ADMIN', 'MENTOR')")
-  public ResponseEntity<ApiResponse<MentorResponse>> updateMentor(
+  public ResponseEntity<ApiResponse<MentorDetailResponse>> updateMentor(
       @PathVariable Integer mentorId,
       @Valid @RequestBody MentorProfileRequest request,
       @AuthenticationPrincipal UserDetails userDetails) {

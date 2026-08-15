@@ -8,6 +8,7 @@ import com.example.internshipmanagementsystem.entity.AssessmentRound;
 import com.example.internshipmanagementsystem.entity.InternshipPhase;
 import com.example.internshipmanagementsystem.exception.InvalidAssessmentRoundException;
 import com.example.internshipmanagementsystem.mapper.AssessmentRoundMapper;
+import com.example.internshipmanagementsystem.mapper.RoundCriterionMapper;
 import com.example.internshipmanagementsystem.repository.AssessmentResultRepository;
 import com.example.internshipmanagementsystem.repository.AssessmentRoundRepository;
 import com.example.internshipmanagementsystem.repository.EvaluationCriterionRepository;
@@ -41,7 +42,8 @@ class AssessmentRoundServiceImplTest {
             phaseRepository,
             Mockito.mock(EvaluationCriterionRepository.class),
             Mockito.mock(RoundCriterionRepository.class),
-            new AssessmentRoundMapper());
+            new AssessmentRoundMapper(
+                Mockito.mock(RoundCriterionRepository.class), new RoundCriterionMapper()));
 
     assertThatThrownBy(
             () ->

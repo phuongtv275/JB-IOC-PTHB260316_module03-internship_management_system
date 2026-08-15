@@ -2,7 +2,8 @@ package com.example.internshipmanagementsystem.service.impl;
 
 import com.example.internshipmanagementsystem.dto.request.AssessmentRoundRequest;
 import com.example.internshipmanagementsystem.dto.request.RoundCriterionInput;
-import com.example.internshipmanagementsystem.dto.response.AssessmentRoundResponse;
+import com.example.internshipmanagementsystem.dto.response.AssessmentRoundDetailResponse;
+import com.example.internshipmanagementsystem.dto.response.AssessmentRoundSummaryResponse;
 import com.example.internshipmanagementsystem.dto.response.PageResponse;
 import com.example.internshipmanagementsystem.entity.AssessmentRound;
 import com.example.internshipmanagementsystem.entity.EvaluationCriterion;
@@ -42,22 +43,23 @@ public class AssessmentRoundServiceImpl implements AssessmentRoundService {
   private final AssessmentRoundMapper assessmentRoundMapper;
 
   @Override
-  public PageResponse<AssessmentRoundResponse> getRounds(Integer phaseId, Pageable pageable) {
+  public PageResponse<AssessmentRoundSummaryResponse> getRounds(
+      Integer phaseId, Pageable pageable) {
     Page<AssessmentRound> rounds =
         phaseId == null
             ? assessmentRoundRepository.findAll(pageable)
             : assessmentRoundRepository.findByPhasePhaseId(phaseId, pageable);
-    return PageResponse.from(rounds.map(assessmentRoundMapper::toResponse));
+    return PageResponse.from(rounds.map(assessmentRoundMapper::toSummaryResponse));
   }
 
   @Override
-  public AssessmentRoundResponse getRound(Integer roundId) {
-    return assessmentRoundMapper.toResponse(findRound(roundId));
+  public AssessmentRoundDetailResponse getRound(Integer roundId) {
+    return assessmentRoundMapper.toDetailResponse(findRound(roundId));
   }
 
   @Override
   @Transactional
-  public AssessmentRoundResponse createRound(AssessmentRoundRequest request) {
+  public AssessmentRoundDetailResponse createRound(AssessmentRoundRequest request) {
     validateDates(request.startDate(), request.endDate());
     AssessmentRound round =
         assessmentRoundRepository.save(
@@ -68,12 +70,13 @@ public class AssessmentRoundServiceImpl implements AssessmentRoundService {
                 request.endDate(),
                 request.description()));
     createCriteria(round, request.criteria());
-    return assessmentRoundMapper.toResponse(round);
+    return assessmentRoundMapper.toDetailResponse(round);
   }
 
   @Override
   @Transactional
-  public AssessmentRoundResponse updateRound(Integer roundId, AssessmentRoundRequest request) {
+  public AssessmentRoundDetailResponse updateRound(
+      Integer roundId, AssessmentRoundRequest request) {
     validateDates(request.startDate(), request.endDate());
     AssessmentRound round = findRound(roundId);
     if (!Objects.equals(round.getPhase().getPhaseId(), request.phaseId())
@@ -87,7 +90,7 @@ public class AssessmentRoundServiceImpl implements AssessmentRoundService {
         request.startDate(),
         request.endDate(),
         request.description());
-    return assessmentRoundMapper.toResponse(round);
+    return assessmentRoundMapper.toDetailResponse(round);
   }
 
   @Override

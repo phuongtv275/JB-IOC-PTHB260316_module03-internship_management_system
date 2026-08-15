@@ -6,7 +6,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.example.internshipmanagementsystem.dto.response.MentorResponse;
+import com.example.internshipmanagementsystem.dto.response.MentorDetailResponse;
 import com.example.internshipmanagementsystem.security.JwtAuthenticationFilter;
 import com.example.internshipmanagementsystem.service.MentorService;
 import java.time.LocalDateTime;
@@ -31,7 +31,8 @@ class MentorControllerTest {
   void shouldCreateMentor_whenRequestIsValid() throws Exception {
     when(mentorService.createMentor(any()))
         .thenReturn(
-            new MentorResponse(1, "Engineering", null, LocalDateTime.now(), LocalDateTime.now()));
+            new MentorDetailResponse(
+                1, "Engineering", null, null, LocalDateTime.now(), LocalDateTime.now()));
 
     mockMvc
         .perform(

@@ -6,6 +6,7 @@ import com.example.internshipmanagementsystem.dto.request.CreateUserRequest;
 import com.example.internshipmanagementsystem.dto.request.UpdateUserRequest;
 import com.example.internshipmanagementsystem.dto.response.PageResponse;
 import com.example.internshipmanagementsystem.dto.response.UserResponse;
+import com.example.internshipmanagementsystem.dto.response.UserSummaryResponse;
 import com.example.internshipmanagementsystem.entity.Role;
 import com.example.internshipmanagementsystem.entity.User;
 import com.example.internshipmanagementsystem.exception.AccessDeniedBusinessException;
@@ -37,10 +38,10 @@ public class UserServiceImpl implements UserService {
   private final UserMapper userMapper;
 
   @Override
-  public PageResponse<UserResponse> getUsers(Role role, Pageable pageable) {
+  public PageResponse<UserSummaryResponse> getUsers(Role role, Pageable pageable) {
     Page<User> users =
         role == null ? userRepository.findAll(pageable) : userRepository.findByRole(role, pageable);
-    return PageResponse.from(users.map(userMapper::toResponse));
+    return PageResponse.from(users.map(userMapper::toSummaryResponse));
   }
 
   @Override

@@ -3,7 +3,8 @@ package com.example.internshipmanagementsystem.controller;
 import com.example.internshipmanagementsystem.dto.request.AssignmentStatusRequest;
 import com.example.internshipmanagementsystem.dto.request.InternshipAssignmentRequest;
 import com.example.internshipmanagementsystem.dto.response.ApiResponse;
-import com.example.internshipmanagementsystem.dto.response.InternshipAssignmentResponse;
+import com.example.internshipmanagementsystem.dto.response.InternshipAssignmentDetailResponse;
+import com.example.internshipmanagementsystem.dto.response.InternshipAssignmentSummaryResponse;
 import com.example.internshipmanagementsystem.dto.response.PageResponse;
 import com.example.internshipmanagementsystem.service.InternshipAssignmentService;
 import jakarta.validation.Valid;
@@ -32,9 +33,10 @@ public class InternshipAssignmentController {
 
   @GetMapping
   @PreAuthorize("hasAnyRole('ADMIN', 'MENTOR', 'STUDENT')")
-  public ResponseEntity<ApiResponse<PageResponse<InternshipAssignmentResponse>>> getAssignments(
-      @AuthenticationPrincipal UserDetails userDetails,
-      @PageableDefault(size = 5, sort = "assignmentId") Pageable pageable) {
+  public ResponseEntity<ApiResponse<PageResponse<InternshipAssignmentSummaryResponse>>>
+      getAssignments(
+          @AuthenticationPrincipal UserDetails userDetails,
+          @PageableDefault(size = 5, sort = "assignmentId") Pageable pageable) {
     return ResponseEntity.ok(
         ApiResponse.success(
             200,
@@ -44,7 +46,7 @@ public class InternshipAssignmentController {
 
   @GetMapping("/{assignmentId}")
   @PreAuthorize("hasAnyRole('ADMIN', 'MENTOR', 'STUDENT')")
-  public ResponseEntity<ApiResponse<InternshipAssignmentResponse>> getAssignment(
+  public ResponseEntity<ApiResponse<InternshipAssignmentDetailResponse>> getAssignment(
       @PathVariable Integer assignmentId, @AuthenticationPrincipal UserDetails userDetails) {
     return ResponseEntity.ok(
         ApiResponse.success(
@@ -55,7 +57,7 @@ public class InternshipAssignmentController {
 
   @PostMapping
   @PreAuthorize("hasRole('ADMIN')")
-  public ResponseEntity<ApiResponse<InternshipAssignmentResponse>> createAssignment(
+  public ResponseEntity<ApiResponse<InternshipAssignmentDetailResponse>> createAssignment(
       @Valid @RequestBody InternshipAssignmentRequest request) {
     return ResponseEntity.status(HttpStatus.CREATED)
         .body(
@@ -67,7 +69,7 @@ public class InternshipAssignmentController {
 
   @PutMapping("/{assignmentId}/status")
   @PreAuthorize("hasRole('ADMIN')")
-  public ResponseEntity<ApiResponse<InternshipAssignmentResponse>> updateStatus(
+  public ResponseEntity<ApiResponse<InternshipAssignmentDetailResponse>> updateStatus(
       @PathVariable Integer assignmentId, @Valid @RequestBody AssignmentStatusRequest request) {
     return ResponseEntity.ok(
         ApiResponse.success(

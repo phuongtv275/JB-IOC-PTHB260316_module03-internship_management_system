@@ -7,6 +7,7 @@ import com.example.internshipmanagementsystem.dto.request.UpdateUserRequest;
 import com.example.internshipmanagementsystem.dto.response.ApiResponse;
 import com.example.internshipmanagementsystem.dto.response.PageResponse;
 import com.example.internshipmanagementsystem.dto.response.UserResponse;
+import com.example.internshipmanagementsystem.dto.response.UserSummaryResponse;
 import com.example.internshipmanagementsystem.entity.Role;
 import com.example.internshipmanagementsystem.service.UserService;
 import jakarta.validation.Valid;
@@ -37,7 +38,7 @@ public class UserController {
   private final UserService userService;
 
   @GetMapping
-  public ResponseEntity<ApiResponse<PageResponse<UserResponse>>> getUsers(
+  public ResponseEntity<ApiResponse<PageResponse<UserSummaryResponse>>> getUsers(
       @RequestParam(required = false) Role role,
       @PageableDefault(size = 5, sort = "userId") Pageable pageable) {
     return ResponseEntity.ok(

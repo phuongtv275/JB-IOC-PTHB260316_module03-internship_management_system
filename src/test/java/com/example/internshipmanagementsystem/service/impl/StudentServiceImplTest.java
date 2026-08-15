@@ -9,6 +9,7 @@ import com.example.internshipmanagementsystem.entity.Student;
 import com.example.internshipmanagementsystem.entity.User;
 import com.example.internshipmanagementsystem.exception.AccessDeniedBusinessException;
 import com.example.internshipmanagementsystem.mapper.StudentMapper;
+import com.example.internshipmanagementsystem.mapper.UserMapper;
 import com.example.internshipmanagementsystem.repository.StudentRepository;
 import com.example.internshipmanagementsystem.repository.UserRepository;
 import java.util.Optional;
@@ -20,7 +21,8 @@ class StudentServiceImplTest {
   private final StudentRepository studentRepository = Mockito.mock(StudentRepository.class);
   private final UserRepository userRepository = Mockito.mock(UserRepository.class);
   private final StudentServiceImpl studentService =
-      new StudentServiceImpl(studentRepository, userRepository, new StudentMapper());
+      new StudentServiceImpl(
+          studentRepository, userRepository, new StudentMapper(new UserMapper()));
 
   @Test
   void shouldThrowException_whenStudentUpdatesAnotherProfile() {

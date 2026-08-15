@@ -2,7 +2,8 @@ package com.example.internshipmanagementsystem.service.impl;
 
 import com.example.internshipmanagementsystem.dto.request.StudentProfileRequest;
 import com.example.internshipmanagementsystem.dto.response.PageResponse;
-import com.example.internshipmanagementsystem.dto.response.StudentResponse;
+import com.example.internshipmanagementsystem.dto.response.StudentDetailResponse;
+import com.example.internshipmanagementsystem.dto.response.StudentSummaryResponse;
 import com.example.internshipmanagementsystem.entity.Role;
 import com.example.internshipmanagementsystem.entity.Student;
 import com.example.internshipmanagementsystem.entity.User;
@@ -29,24 +30,25 @@ public class StudentServiceImpl implements StudentService {
   private final StudentMapper studentMapper;
 
   @Override
-  public PageResponse<StudentResponse> getStudents(String actorUsername, Pageable pageable) {
+  public PageResponse<StudentSummaryResponse> getStudents(String actorUsername, Pageable pageable) {
     User actor = findUserByUsername(actorUsername);
     if (actor.getRole() == Role.MENTOR) {
       return PageResponse.from(Page.empty(pageable));
     }
-    return PageResponse.from(studentRepository.findAll(pageable).map(studentMapper::toResponse));
+    return PageResponse.from(
+        studentRepository.findAll(pageable).map(studentMapper::toSummaryResponse));
   }
 
   @Override
-  public StudentResponse getStudent(Integer studentId, String actorUsername) {
+  public StudentDetailResponse getStudent(Integer studentId, String actorUsername) {
     Student student = findStudent(studentId);
     assertStudentOwnsProfile(student, actorUsername);
-    return studentMapper.toResponse(student);
+    return studentMapper.toDetailResponse(student);
   }
 
   @Override
   @Transactional
-  public StudentResponse createStudent(StudentProfileRequest request) {
+  public StudentDetailResponse createStudent(StudentProfileRequest request) {
     User user = findUser(request.studentId());
     requireRole(user, Role.STUDENT);
     if (studentRepository.existsById(request.studentId())
@@ -61,12 +63,12 @@ public class StudentServiceImpl implements StudentService {
             request.className(),
             request.dateOfBirth(),
             request.address());
-    return studentMapper.toResponse(studentRepository.save(student));
+    return studentMapper.toDetailResponse(studentRepository.save(student));
   }
 
   @Override
   @Transactional
-  public StudentResponse updateStudent(
+  public StudentDetailResponse updateStudent(
       Integer studentId, StudentProfileRequest request, String actorUsername) {
     Student student = findStudent(studentId);
     assertStudentOwnsProfile(student, actorUsername);
@@ -79,7 +81,7 @@ public class StudentServiceImpl implements StudentService {
         request.className(),
         request.dateOfBirth(),
         request.address());
-    return studentMapper.toResponse(student);
+    return studentMapper.toDetailResponse(student);
   }
 
   private Student findStudent(Integer studentId) {
