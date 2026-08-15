@@ -4,7 +4,7 @@ Tài liệu này kiểm thử 44 endpoint theo đúng API đang triển khai. M�
 
 ## 1. Chuẩn bị
 
-1. Tạo database PostgreSQL `internship-management-system`, chạy lần lượt `docs/schema.sql` và `docs/indexes.sql`.
+1. Tạo database PostgreSQL `internship-management-system`, chạy lần lượt `../src/main/resources/static/sql/schema.sql` và `../src/main/resources/static/sql/indexes.sql`.
 2. Thiết lập biến môi trường rồi khởi động ứng dụng:
 
    ```bash
