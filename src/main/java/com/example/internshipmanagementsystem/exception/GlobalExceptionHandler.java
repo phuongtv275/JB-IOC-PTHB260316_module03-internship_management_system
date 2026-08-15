@@ -4,6 +4,7 @@ import com.example.internshipmanagementsystem.dto.response.ErrorResponse;
 import com.example.internshipmanagementsystem.dto.response.FieldErrorResponse;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -60,6 +61,16 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(AccessDeniedException.class)
   ResponseEntity<ErrorResponse> handleAccessDeniedException(AccessDeniedException exception) {
     return response(HttpStatus.FORBIDDEN, "ACCESS_DENIED", "Access denied", List.of());
+  }
+
+  @ExceptionHandler(DataIntegrityViolationException.class)
+  ResponseEntity<ErrorResponse> handleDataIntegrityViolation(
+      DataIntegrityViolationException exception) {
+    return response(
+        HttpStatus.CONFLICT,
+        "RESOURCE_CONFLICT",
+        "Cannot modify resource because related records exist",
+        List.of());
   }
 
   @ExceptionHandler(Exception.class)
