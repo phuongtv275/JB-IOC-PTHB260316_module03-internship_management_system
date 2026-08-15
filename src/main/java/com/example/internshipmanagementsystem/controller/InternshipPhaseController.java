@@ -31,7 +31,7 @@ public class InternshipPhaseController {
   @GetMapping
   @PreAuthorize("hasAnyRole('ADMIN', 'MENTOR', 'STUDENT')")
   public ResponseEntity<ApiResponse<PageResponse<InternshipPhaseResponse>>> getPhases(
-      @PageableDefault(size = 5) Pageable pageable) {
+      @PageableDefault(size = 5, sort = "phaseId") Pageable pageable) {
     return ResponseEntity.ok(
         ApiResponse.success(
             200, "Internship phases retrieved", internshipPhaseService.getPhases(pageable)));

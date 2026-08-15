@@ -32,7 +32,7 @@ public class MentorController {
   @GetMapping
   @PreAuthorize("hasAnyRole('ADMIN', 'STUDENT')")
   public ResponseEntity<ApiResponse<PageResponse<MentorResponse>>> getMentors(
-      @PageableDefault(size = 5) Pageable pageable) {
+      @PageableDefault(size = 5, sort = "mentorId") Pageable pageable) {
     return ResponseEntity.ok(
         ApiResponse.success(200, "Mentors retrieved", mentorService.getMentors(pageable)));
   }

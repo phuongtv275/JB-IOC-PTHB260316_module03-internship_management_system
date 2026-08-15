@@ -34,7 +34,7 @@ public class InternshipAssignmentController {
   @PreAuthorize("hasAnyRole('ADMIN', 'MENTOR', 'STUDENT')")
   public ResponseEntity<ApiResponse<PageResponse<InternshipAssignmentResponse>>> getAssignments(
       @AuthenticationPrincipal UserDetails userDetails,
-      @PageableDefault(size = 5) Pageable pageable) {
+      @PageableDefault(size = 5, sort = "assignmentId") Pageable pageable) {
     return ResponseEntity.ok(
         ApiResponse.success(
             200,
