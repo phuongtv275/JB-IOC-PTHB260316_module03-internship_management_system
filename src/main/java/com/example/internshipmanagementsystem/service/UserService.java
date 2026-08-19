@@ -4,13 +4,14 @@ import com.example.internshipmanagementsystem.dto.request.ChangeRoleRequest;
 import com.example.internshipmanagementsystem.dto.request.ChangeStatusRequest;
 import com.example.internshipmanagementsystem.dto.request.CreateUserRequest;
 import com.example.internshipmanagementsystem.dto.request.UpdateUserRequest;
+import com.example.internshipmanagementsystem.dto.response.PageResponse;
 import com.example.internshipmanagementsystem.dto.response.UserResponse;
 import com.example.internshipmanagementsystem.entity.Role;
-import java.util.List;
+import org.springframework.data.domain.Pageable;
 
 public interface UserService {
 
-  List<UserResponse> getUsers(Role role);
+  PageResponse<UserResponse> getUsers(Role role, Pageable pageable);
 
   UserResponse getUser(Integer userId);
 

@@ -2,11 +2,12 @@ package com.example.internshipmanagementsystem.service;
 
 import com.example.internshipmanagementsystem.dto.request.AssessmentResultRequest;
 import com.example.internshipmanagementsystem.dto.response.AssessmentResultResponse;
-import java.util.List;
+import com.example.internshipmanagementsystem.dto.response.PageResponse;
+import org.springframework.data.domain.Pageable;
 
 public interface AssessmentResultService {
 
-  List<AssessmentResultResponse> getResults(String actorUsername);
+  PageResponse<AssessmentResultResponse> getResults(String actorUsername, Pageable pageable);
 
   AssessmentResultResponse createResult(AssessmentResultRequest request, String actorUsername);
 

@@ -2,6 +2,7 @@ package com.example.internshipmanagementsystem.service.impl;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.example.internshipmanagementsystem.dto.request.ChangeRoleRequest;
@@ -16,9 +17,12 @@ import com.example.internshipmanagementsystem.mapper.UserMapper;
 import com.example.internshipmanagementsystem.repository.MentorRepository;
 import com.example.internshipmanagementsystem.repository.StudentRepository;
 import com.example.internshipmanagementsystem.repository.UserRepository;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -31,6 +35,22 @@ class UserServiceImplTest {
   private final UserServiceImpl userService =
       new UserServiceImpl(
           userRepository, studentRepository, mentorRepository, passwordEncoder, new UserMapper());
+
+  @Test
+  void shouldRequestDatabasePage_whenUsersAreRetrieved() {
+    User user =
+        User.create("student", "hash", "Student", "student@example.com", null, Role.STUDENT);
+    PageRequest pageable = PageRequest.of(1, 5);
+    when(userRepository.findByRole(Role.STUDENT, pageable))
+        .thenReturn(new PageImpl<>(List.of(user), pageable, 6));
+
+    var response = userService.getUsers(Role.STUDENT, pageable);
+
+    org.assertj.core.api.Assertions.assertThat(response.content()).hasSize(1);
+    org.assertj.core.api.Assertions.assertThat(response.page()).isEqualTo(1);
+    org.assertj.core.api.Assertions.assertThat(response.totalElements()).isEqualTo(6);
+    verify(userRepository).findByRole(Role.STUDENT, pageable);
+  }
 
   @Test
   void shouldCreateUser_whenUsernameAndEmailAreAvailable() {

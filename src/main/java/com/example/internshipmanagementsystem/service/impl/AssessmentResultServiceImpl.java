@@ -2,6 +2,7 @@ package com.example.internshipmanagementsystem.service.impl;
 
 import com.example.internshipmanagementsystem.dto.request.AssessmentResultRequest;
 import com.example.internshipmanagementsystem.dto.response.AssessmentResultResponse;
+import com.example.internshipmanagementsystem.dto.response.PageResponse;
 import com.example.internshipmanagementsystem.entity.AssessmentResult;
 import com.example.internshipmanagementsystem.entity.AssessmentRound;
 import com.example.internshipmanagementsystem.entity.EvaluationCriterion;
@@ -21,9 +22,10 @@ import com.example.internshipmanagementsystem.repository.RoundCriterionRepositor
 import com.example.internshipmanagementsystem.repository.UserRepository;
 import com.example.internshipmanagementsystem.service.AssessmentResultService;
 import java.math.BigDecimal;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,17 +44,20 @@ public class AssessmentResultServiceImpl implements AssessmentResultService {
   private final AssessmentResultMapper assessmentResultMapper;
 
   @Override
-  public List<AssessmentResultResponse> getResults(String actorUsername) {
+  public PageResponse<AssessmentResultResponse> getResults(
+      String actorUsername, Pageable pageable) {
     User actor = findUser(actorUsername);
-    List<AssessmentResult> results =
+    Page<AssessmentResult> results =
         switch (actor.getRole()) {
-          case ADMIN -> assessmentResultRepository.findAll();
+          case ADMIN -> assessmentResultRepository.findAll(pageable);
           case MENTOR ->
-              assessmentResultRepository.findByAssignmentMentorUserUsername(actorUsername);
+              assessmentResultRepository.findByAssignmentMentorUserUsername(
+                  actorUsername, pageable);
           case STUDENT ->
-              assessmentResultRepository.findByAssignmentStudentUserUsername(actorUsername);
+              assessmentResultRepository.findByAssignmentStudentUserUsername(
+                  actorUsername, pageable);
         };
-    return results.stream().map(assessmentResultMapper::toResponse).toList();
+    return PageResponse.from(results.map(assessmentResultMapper::toResponse));
   }
 
   @Override

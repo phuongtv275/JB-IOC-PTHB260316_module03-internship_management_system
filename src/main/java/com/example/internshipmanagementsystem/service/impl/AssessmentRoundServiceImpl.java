@@ -3,6 +3,7 @@ package com.example.internshipmanagementsystem.service.impl;
 import com.example.internshipmanagementsystem.dto.request.AssessmentRoundRequest;
 import com.example.internshipmanagementsystem.dto.request.RoundCriterionInput;
 import com.example.internshipmanagementsystem.dto.response.AssessmentRoundResponse;
+import com.example.internshipmanagementsystem.dto.response.PageResponse;
 import com.example.internshipmanagementsystem.entity.AssessmentRound;
 import com.example.internshipmanagementsystem.entity.EvaluationCriterion;
 import com.example.internshipmanagementsystem.entity.InternshipPhase;
@@ -23,6 +24,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,12 +42,12 @@ public class AssessmentRoundServiceImpl implements AssessmentRoundService {
   private final AssessmentRoundMapper assessmentRoundMapper;
 
   @Override
-  public List<AssessmentRoundResponse> getRounds(Integer phaseId) {
-    List<AssessmentRound> rounds =
+  public PageResponse<AssessmentRoundResponse> getRounds(Integer phaseId, Pageable pageable) {
+    Page<AssessmentRound> rounds =
         phaseId == null
-            ? assessmentRoundRepository.findAll()
-            : assessmentRoundRepository.findByPhasePhaseId(phaseId);
-    return rounds.stream().map(assessmentRoundMapper::toResponse).toList();
+            ? assessmentRoundRepository.findAll(pageable)
+            : assessmentRoundRepository.findByPhasePhaseId(phaseId, pageable);
+    return PageResponse.from(rounds.map(assessmentRoundMapper::toResponse));
   }
 
   @Override

@@ -2,6 +2,7 @@ package com.example.internshipmanagementsystem.service.impl;
 
 import com.example.internshipmanagementsystem.dto.request.MentorProfileRequest;
 import com.example.internshipmanagementsystem.dto.response.MentorResponse;
+import com.example.internshipmanagementsystem.dto.response.PageResponse;
 import com.example.internshipmanagementsystem.entity.Mentor;
 import com.example.internshipmanagementsystem.entity.Role;
 import com.example.internshipmanagementsystem.entity.User;
@@ -12,8 +13,8 @@ import com.example.internshipmanagementsystem.mapper.MentorMapper;
 import com.example.internshipmanagementsystem.repository.MentorRepository;
 import com.example.internshipmanagementsystem.repository.UserRepository;
 import com.example.internshipmanagementsystem.service.MentorService;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,8 +28,8 @@ public class MentorServiceImpl implements MentorService {
   private final MentorMapper mentorMapper;
 
   @Override
-  public List<MentorResponse> getMentors() {
-    return mentorRepository.findAll().stream().map(mentorMapper::toResponse).toList();
+  public PageResponse<MentorResponse> getMentors(Pageable pageable) {
+    return PageResponse.from(mentorRepository.findAll(pageable).map(mentorMapper::toResponse));
   }
 
   @Override

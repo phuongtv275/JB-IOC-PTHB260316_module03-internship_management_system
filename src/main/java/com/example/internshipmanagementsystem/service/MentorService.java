@@ -2,11 +2,12 @@ package com.example.internshipmanagementsystem.service;
 
 import com.example.internshipmanagementsystem.dto.request.MentorProfileRequest;
 import com.example.internshipmanagementsystem.dto.response.MentorResponse;
-import java.util.List;
+import com.example.internshipmanagementsystem.dto.response.PageResponse;
+import org.springframework.data.domain.Pageable;
 
 public interface MentorService {
 
-  List<MentorResponse> getMentors();
+  PageResponse<MentorResponse> getMentors(Pageable pageable);
 
   MentorResponse getMentor(Integer mentorId, String actorUsername);
 

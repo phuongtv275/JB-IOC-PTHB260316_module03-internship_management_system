@@ -1,12 +1,13 @@
 package com.example.internshipmanagementsystem.service;
 
 import com.example.internshipmanagementsystem.dto.request.StudentProfileRequest;
+import com.example.internshipmanagementsystem.dto.response.PageResponse;
 import com.example.internshipmanagementsystem.dto.response.StudentResponse;
-import java.util.List;
+import org.springframework.data.domain.Pageable;
 
 public interface StudentService {
 
-  List<StudentResponse> getStudents(String actorUsername);
+  PageResponse<StudentResponse> getStudents(String actorUsername, Pageable pageable);
 
   StudentResponse getStudent(Integer studentId, String actorUsername);
 

@@ -1,6 +1,7 @@
 package com.example.internshipmanagementsystem.service.impl;
 
 import com.example.internshipmanagementsystem.dto.request.RoundCriterionRequest;
+import com.example.internshipmanagementsystem.dto.response.PageResponse;
 import com.example.internshipmanagementsystem.dto.response.RoundCriterionResponse;
 import com.example.internshipmanagementsystem.entity.AssessmentRound;
 import com.example.internshipmanagementsystem.entity.EvaluationCriterion;
@@ -13,8 +14,9 @@ import com.example.internshipmanagementsystem.repository.AssessmentRoundReposito
 import com.example.internshipmanagementsystem.repository.EvaluationCriterionRepository;
 import com.example.internshipmanagementsystem.repository.RoundCriterionRepository;
 import com.example.internshipmanagementsystem.service.RoundCriterionService;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,12 +31,12 @@ public class RoundCriterionServiceImpl implements RoundCriterionService {
   private final RoundCriterionMapper roundCriterionMapper;
 
   @Override
-  public List<RoundCriterionResponse> getRoundCriteria(Integer roundId) {
-    List<RoundCriterion> criteria =
+  public PageResponse<RoundCriterionResponse> getRoundCriteria(Integer roundId, Pageable pageable) {
+    Page<RoundCriterion> criteria =
         roundId == null
-            ? roundCriterionRepository.findAll()
-            : roundCriterionRepository.findByRoundRoundId(roundId);
-    return criteria.stream().map(roundCriterionMapper::toResponse).toList();
+            ? roundCriterionRepository.findAll(pageable)
+            : roundCriterionRepository.findByRoundRoundId(roundId, pageable);
+    return PageResponse.from(criteria.map(roundCriterionMapper::toResponse));
   }
 
   @Override

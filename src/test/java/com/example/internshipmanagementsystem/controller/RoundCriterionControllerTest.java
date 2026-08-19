@@ -1,5 +1,7 @@
 package com.example.internshipmanagementsystem.controller;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -10,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -28,6 +31,6 @@ class RoundCriterionControllerTest {
         .perform(get("/api/round_criteria").queryParam("round_id", "9"))
         .andExpect(status().isOk());
 
-    verify(roundCriterionService).getRoundCriteria(9);
+    verify(roundCriterionService).getRoundCriteria(eq(9), any(Pageable.class));
   }
 }

@@ -1,7 +1,8 @@
 package com.example.internshipmanagementsystem.repository;
 
 import com.example.internshipmanagementsystem.entity.AssessmentResult;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface AssessmentResultRepository extends JpaRepository<AssessmentResult, Integer> {
@@ -11,7 +12,7 @@ public interface AssessmentResultRepository extends JpaRepository<AssessmentResu
   boolean existsByAssignmentAssignmentIdAndRoundRoundIdAndCriterionCriterionId(
       Integer assignmentId, Integer roundId, Integer criterionId);
 
-  List<AssessmentResult> findByAssignmentMentorUserUsername(String username);
+  Page<AssessmentResult> findByAssignmentMentorUserUsername(String username, Pageable pageable);
 
-  List<AssessmentResult> findByAssignmentStudentUserUsername(String username);
+  Page<AssessmentResult> findByAssignmentStudentUserUsername(String username, Pageable pageable);
 }

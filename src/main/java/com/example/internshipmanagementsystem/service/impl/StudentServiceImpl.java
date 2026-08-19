@@ -1,6 +1,7 @@
 package com.example.internshipmanagementsystem.service.impl;
 
 import com.example.internshipmanagementsystem.dto.request.StudentProfileRequest;
+import com.example.internshipmanagementsystem.dto.response.PageResponse;
 import com.example.internshipmanagementsystem.dto.response.StudentResponse;
 import com.example.internshipmanagementsystem.entity.Role;
 import com.example.internshipmanagementsystem.entity.Student;
@@ -12,8 +13,9 @@ import com.example.internshipmanagementsystem.mapper.StudentMapper;
 import com.example.internshipmanagementsystem.repository.StudentRepository;
 import com.example.internshipmanagementsystem.repository.UserRepository;
 import com.example.internshipmanagementsystem.service.StudentService;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,12 +29,12 @@ public class StudentServiceImpl implements StudentService {
   private final StudentMapper studentMapper;
 
   @Override
-  public List<StudentResponse> getStudents(String actorUsername) {
+  public PageResponse<StudentResponse> getStudents(String actorUsername, Pageable pageable) {
     User actor = findUserByUsername(actorUsername);
     if (actor.getRole() == Role.MENTOR) {
-      return List.of();
+      return PageResponse.from(Page.empty(pageable));
     }
-    return studentRepository.findAll().stream().map(studentMapper::toResponse).toList();
+    return PageResponse.from(studentRepository.findAll(pageable).map(studentMapper::toResponse));
   }
 
   @Override

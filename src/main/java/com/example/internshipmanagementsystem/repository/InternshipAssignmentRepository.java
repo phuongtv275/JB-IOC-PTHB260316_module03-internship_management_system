@@ -1,7 +1,8 @@
 package com.example.internshipmanagementsystem.repository;
 
 import com.example.internshipmanagementsystem.entity.InternshipAssignment;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface InternshipAssignmentRepository
@@ -9,7 +10,7 @@ public interface InternshipAssignmentRepository
 
   boolean existsByStudentStudentIdAndPhasePhaseId(Integer studentId, Integer phaseId);
 
-  List<InternshipAssignment> findByMentorUserUsername(String username);
+  Page<InternshipAssignment> findByMentorUserUsername(String username, Pageable pageable);
 
-  List<InternshipAssignment> findByStudentUserUsername(String username);
+  Page<InternshipAssignment> findByStudentUserUsername(String username, Pageable pageable);
 }
