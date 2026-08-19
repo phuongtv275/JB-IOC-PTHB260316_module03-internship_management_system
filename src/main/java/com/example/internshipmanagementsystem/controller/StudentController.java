@@ -3,7 +3,8 @@ package com.example.internshipmanagementsystem.controller;
 import com.example.internshipmanagementsystem.dto.request.StudentProfileRequest;
 import com.example.internshipmanagementsystem.dto.response.ApiResponse;
 import com.example.internshipmanagementsystem.dto.response.PageResponse;
-import com.example.internshipmanagementsystem.dto.response.StudentResponse;
+import com.example.internshipmanagementsystem.dto.response.StudentDetailResponse;
+import com.example.internshipmanagementsystem.dto.response.StudentSummaryResponse;
 import com.example.internshipmanagementsystem.service.StudentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +32,7 @@ public class StudentController {
 
   @GetMapping
   @PreAuthorize("hasAnyRole('ADMIN', 'MENTOR')")
-  public ResponseEntity<ApiResponse<PageResponse<StudentResponse>>> getStudents(
+  public ResponseEntity<ApiResponse<PageResponse<StudentSummaryResponse>>> getStudents(
       @AuthenticationPrincipal UserDetails userDetails,
       @PageableDefault(size = 5, sort = "studentId") Pageable pageable) {
     return ResponseEntity.ok(
@@ -43,7 +44,7 @@ public class StudentController {
 
   @GetMapping("/{studentId}")
   @PreAuthorize("hasAnyRole('ADMIN', 'MENTOR', 'STUDENT')")
-  public ResponseEntity<ApiResponse<StudentResponse>> getStudent(
+  public ResponseEntity<ApiResponse<StudentDetailResponse>> getStudent(
       @PathVariable Integer studentId, @AuthenticationPrincipal UserDetails userDetails) {
     return ResponseEntity.ok(
         ApiResponse.success(
@@ -54,7 +55,7 @@ public class StudentController {
 
   @PostMapping
   @PreAuthorize("hasRole('ADMIN')")
-  public ResponseEntity<ApiResponse<StudentResponse>> createStudent(
+  public ResponseEntity<ApiResponse<StudentDetailResponse>> createStudent(
       @Valid @RequestBody StudentProfileRequest request) {
     return ResponseEntity.status(HttpStatus.CREATED)
         .body(ApiResponse.success(201, "Student created", studentService.createStudent(request)));
@@ -62,7 +63,7 @@ public class StudentController {
 
   @PutMapping("/{studentId}")
   @PreAuthorize("hasAnyRole('ADMIN', 'STUDENT')")
-  public ResponseEntity<ApiResponse<StudentResponse>> updateStudent(
+  public ResponseEntity<ApiResponse<StudentDetailResponse>> updateStudent(
       @PathVariable Integer studentId,
       @Valid @RequestBody StudentProfileRequest request,
       @AuthenticationPrincipal UserDetails userDetails) {

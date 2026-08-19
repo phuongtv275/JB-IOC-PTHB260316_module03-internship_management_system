@@ -1,7 +1,8 @@
 package com.example.internshipmanagementsystem.service.impl;
 
 import com.example.internshipmanagementsystem.dto.request.MentorProfileRequest;
-import com.example.internshipmanagementsystem.dto.response.MentorResponse;
+import com.example.internshipmanagementsystem.dto.response.MentorDetailResponse;
+import com.example.internshipmanagementsystem.dto.response.MentorSummaryResponse;
 import com.example.internshipmanagementsystem.dto.response.PageResponse;
 import com.example.internshipmanagementsystem.entity.Mentor;
 import com.example.internshipmanagementsystem.entity.Role;
@@ -28,37 +29,38 @@ public class MentorServiceImpl implements MentorService {
   private final MentorMapper mentorMapper;
 
   @Override
-  public PageResponse<MentorResponse> getMentors(Pageable pageable) {
-    return PageResponse.from(mentorRepository.findAll(pageable).map(mentorMapper::toResponse));
+  public PageResponse<MentorSummaryResponse> getMentors(Pageable pageable) {
+    return PageResponse.from(
+        mentorRepository.findAll(pageable).map(mentorMapper::toSummaryResponse));
   }
 
   @Override
-  public MentorResponse getMentor(Integer mentorId, String actorUsername) {
+  public MentorDetailResponse getMentor(Integer mentorId, String actorUsername) {
     Mentor mentor = findMentor(mentorId);
     assertMentorOwnsProfile(mentor, actorUsername);
-    return mentorMapper.toResponse(mentor);
+    return mentorMapper.toDetailResponse(mentor);
   }
 
   @Override
   @Transactional
-  public MentorResponse createMentor(MentorProfileRequest request) {
+  public MentorDetailResponse createMentor(MentorProfileRequest request) {
     User user = findUser(request.mentorId());
     requireRole(user, Role.MENTOR);
     if (mentorRepository.existsById(request.mentorId())) {
       throw new DuplicateResourceException("Mentor profile already exists");
     }
-    return mentorMapper.toResponse(
+    return mentorMapper.toDetailResponse(
         mentorRepository.save(Mentor.create(user, request.department(), request.academicRank())));
   }
 
   @Override
   @Transactional
-  public MentorResponse updateMentor(
+  public MentorDetailResponse updateMentor(
       Integer mentorId, MentorProfileRequest request, String actorUsername) {
     Mentor mentor = findMentor(mentorId);
     assertMentorOwnsProfile(mentor, actorUsername);
     mentor.update(request.department(), request.academicRank());
-    return mentorMapper.toResponse(mentor);
+    return mentorMapper.toDetailResponse(mentor);
   }
 
   private Mentor findMentor(Integer mentorId) {

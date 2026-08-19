@@ -2,7 +2,8 @@ package com.example.internshipmanagementsystem.controller;
 
 import com.example.internshipmanagementsystem.dto.request.AssessmentRoundRequest;
 import com.example.internshipmanagementsystem.dto.response.ApiResponse;
-import com.example.internshipmanagementsystem.dto.response.AssessmentRoundResponse;
+import com.example.internshipmanagementsystem.dto.response.AssessmentRoundDetailResponse;
+import com.example.internshipmanagementsystem.dto.response.AssessmentRoundSummaryResponse;
 import com.example.internshipmanagementsystem.dto.response.PageResponse;
 import com.example.internshipmanagementsystem.service.AssessmentRoundService;
 import jakarta.validation.Valid;
@@ -31,7 +32,7 @@ public class AssessmentRoundController {
 
   @GetMapping
   @PreAuthorize("hasAnyRole('ADMIN', 'MENTOR', 'STUDENT')")
-  public ResponseEntity<ApiResponse<PageResponse<AssessmentRoundResponse>>> getRounds(
+  public ResponseEntity<ApiResponse<PageResponse<AssessmentRoundSummaryResponse>>> getRounds(
       @RequestParam(name = "phase_id", required = false) Integer phaseId,
       @PageableDefault(size = 5, sort = "roundId") Pageable pageable) {
     return ResponseEntity.ok(
@@ -43,7 +44,7 @@ public class AssessmentRoundController {
 
   @GetMapping("/{roundId}")
   @PreAuthorize("hasAnyRole('ADMIN', 'MENTOR', 'STUDENT')")
-  public ResponseEntity<ApiResponse<AssessmentRoundResponse>> getRound(
+  public ResponseEntity<ApiResponse<AssessmentRoundDetailResponse>> getRound(
       @PathVariable Integer roundId) {
     return ResponseEntity.ok(
         ApiResponse.success(
@@ -52,7 +53,7 @@ public class AssessmentRoundController {
 
   @PostMapping
   @PreAuthorize("hasRole('ADMIN')")
-  public ResponseEntity<ApiResponse<AssessmentRoundResponse>> createRound(
+  public ResponseEntity<ApiResponse<AssessmentRoundDetailResponse>> createRound(
       @Valid @RequestBody AssessmentRoundRequest request) {
     return ResponseEntity.status(HttpStatus.CREATED)
         .body(
@@ -62,7 +63,7 @@ public class AssessmentRoundController {
 
   @PutMapping("/{roundId}")
   @PreAuthorize("hasRole('ADMIN')")
-  public ResponseEntity<ApiResponse<AssessmentRoundResponse>> updateRound(
+  public ResponseEntity<ApiResponse<AssessmentRoundDetailResponse>> updateRound(
       @PathVariable Integer roundId, @Valid @RequestBody AssessmentRoundRequest request) {
     return ResponseEntity.ok(
         ApiResponse.success(

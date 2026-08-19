@@ -9,6 +9,7 @@ import com.example.internshipmanagementsystem.entity.Role;
 import com.example.internshipmanagementsystem.entity.User;
 import com.example.internshipmanagementsystem.exception.AccessDeniedBusinessException;
 import com.example.internshipmanagementsystem.mapper.MentorMapper;
+import com.example.internshipmanagementsystem.mapper.UserMapper;
 import com.example.internshipmanagementsystem.repository.MentorRepository;
 import com.example.internshipmanagementsystem.repository.UserRepository;
 import java.util.Optional;
@@ -20,7 +21,7 @@ class MentorServiceImplTest {
   private final MentorRepository mentorRepository = Mockito.mock(MentorRepository.class);
   private final UserRepository userRepository = Mockito.mock(UserRepository.class);
   private final MentorServiceImpl mentorService =
-      new MentorServiceImpl(mentorRepository, userRepository, new MentorMapper());
+      new MentorServiceImpl(mentorRepository, userRepository, new MentorMapper(new UserMapper()));
 
   @Test
   void shouldThrowException_whenMentorReadsAnotherProfile() {

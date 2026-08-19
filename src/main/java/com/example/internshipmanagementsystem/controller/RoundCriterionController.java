@@ -3,7 +3,7 @@ package com.example.internshipmanagementsystem.controller;
 import com.example.internshipmanagementsystem.dto.request.RoundCriterionRequest;
 import com.example.internshipmanagementsystem.dto.response.ApiResponse;
 import com.example.internshipmanagementsystem.dto.response.PageResponse;
-import com.example.internshipmanagementsystem.dto.response.RoundCriterionResponse;
+import com.example.internshipmanagementsystem.dto.response.RoundCriterionDetailResponse;
 import com.example.internshipmanagementsystem.service.RoundCriterionService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +31,7 @@ public class RoundCriterionController {
 
   @GetMapping
   @PreAuthorize("hasAnyRole('ADMIN', 'MENTOR', 'STUDENT')")
-  public ResponseEntity<ApiResponse<PageResponse<RoundCriterionResponse>>> getRoundCriteria(
+  public ResponseEntity<ApiResponse<PageResponse<RoundCriterionDetailResponse>>> getRoundCriteria(
       @RequestParam(name = "round_id", required = false) Integer roundId,
       @PageableDefault(size = 5, sort = "roundCriterionId") Pageable pageable) {
     return ResponseEntity.ok(
@@ -43,7 +43,7 @@ public class RoundCriterionController {
 
   @GetMapping("/{roundCriterionId}")
   @PreAuthorize("hasAnyRole('ADMIN', 'MENTOR', 'STUDENT')")
-  public ResponseEntity<ApiResponse<RoundCriterionResponse>> getRoundCriterion(
+  public ResponseEntity<ApiResponse<RoundCriterionDetailResponse>> getRoundCriterion(
       @PathVariable Integer roundCriterionId) {
     return ResponseEntity.ok(
         ApiResponse.success(
@@ -54,7 +54,7 @@ public class RoundCriterionController {
 
   @PostMapping
   @PreAuthorize("hasRole('ADMIN')")
-  public ResponseEntity<ApiResponse<RoundCriterionResponse>> createRoundCriterion(
+  public ResponseEntity<ApiResponse<RoundCriterionDetailResponse>> createRoundCriterion(
       @Valid @RequestBody RoundCriterionRequest request) {
     return ResponseEntity.status(HttpStatus.CREATED)
         .body(
@@ -66,7 +66,7 @@ public class RoundCriterionController {
 
   @PutMapping("/{roundCriterionId}")
   @PreAuthorize("hasRole('ADMIN')")
-  public ResponseEntity<ApiResponse<RoundCriterionResponse>> updateRoundCriterion(
+  public ResponseEntity<ApiResponse<RoundCriterionDetailResponse>> updateRoundCriterion(
       @PathVariable Integer roundCriterionId, @Valid @RequestBody RoundCriterionRequest request) {
     return ResponseEntity.ok(
         ApiResponse.success(

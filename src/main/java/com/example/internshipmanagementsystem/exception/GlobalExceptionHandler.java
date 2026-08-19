@@ -52,7 +52,7 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(DisabledException.class)
   ResponseEntity<ErrorResponse> handleDisabledAccountException(DisabledException exception) {
     return response(
-        HttpStatus.UNAUTHORIZED,
+        HttpStatus.FORBIDDEN,
         "ACCOUNT_DISABLED",
         "Tài khoản hiện tại đã bị vô hiệu hóa. Liên hệ với mentor hoặc quản lý nhân sự để kích hoạt lại tài khoản",
         List.of());

@@ -6,7 +6,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.example.internshipmanagementsystem.dto.response.StudentResponse;
+import com.example.internshipmanagementsystem.dto.response.StudentDetailResponse;
 import com.example.internshipmanagementsystem.security.JwtAuthenticationFilter;
 import com.example.internshipmanagementsystem.service.StudentService;
 import java.time.LocalDateTime;
@@ -31,8 +31,16 @@ class StudentControllerTest {
   void shouldCreateStudent_whenRequestIsValid() throws Exception {
     when(studentService.createStudent(any()))
         .thenReturn(
-            new StudentResponse(
-                1, "SV001", null, null, null, null, LocalDateTime.now(), LocalDateTime.now()));
+            new StudentDetailResponse(
+                1,
+                "SV001",
+                null,
+                null,
+                null,
+                null,
+                null,
+                LocalDateTime.now(),
+                LocalDateTime.now()));
 
     mockMvc
         .perform(

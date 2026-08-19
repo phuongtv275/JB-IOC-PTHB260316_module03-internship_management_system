@@ -11,11 +11,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.example.internshipmanagementsystem.dto.response.PageResponse;
-import com.example.internshipmanagementsystem.dto.response.UserResponse;
+import com.example.internshipmanagementsystem.dto.response.UserSummaryResponse;
 import com.example.internshipmanagementsystem.entity.Role;
 import com.example.internshipmanagementsystem.security.JwtAuthenticationFilter;
 import com.example.internshipmanagementsystem.service.UserService;
-import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -38,19 +37,10 @@ class UserControllerTest {
 
   @Test
   void shouldReturnUsers_whenRequestedByAdmin() throws Exception {
-    UserResponse user =
-        new UserResponse(
-            1,
-            "student",
-            "Student",
-            "student@example.com",
-            null,
-            Role.STUDENT,
-            true,
-            LocalDateTime.now(),
-            LocalDateTime.now());
+    UserSummaryResponse user = new UserSummaryResponse(1, "student", "Student", Role.STUDENT, true);
     when(userService.getUsers(eq(null), any(Pageable.class)))
-        .thenReturn(new PageResponse<>(List.of(user), 0, 5, 1, 1, true, true));
+        .thenReturn(
+            new PageResponse<>(List.of(user), 0, 5, 1, 1, true, true, List.of("userId,asc")));
 
     mockMvc
         .perform(get("/api/users"))
@@ -85,7 +75,7 @@ class UserControllerTest {
   @Test
   void shouldApplyStableSortAndMaximumSize_whenUsersAreRequested() throws Exception {
     when(userService.getUsers(eq(null), any(Pageable.class)))
-        .thenReturn(new PageResponse<>(List.of(), 0, 100, 0, 0, true, true));
+        .thenReturn(new PageResponse<>(List.of(), 0, 100, 0, 0, true, true, List.of("userId,asc")));
 
     mockMvc.perform(get("/api/users").param("size", "1000")).andExpect(status().isOk());
 

@@ -2,18 +2,18 @@ package com.example.internshipmanagementsystem.service;
 
 import com.example.internshipmanagementsystem.dto.request.RoundCriterionRequest;
 import com.example.internshipmanagementsystem.dto.response.PageResponse;
-import com.example.internshipmanagementsystem.dto.response.RoundCriterionResponse;
+import com.example.internshipmanagementsystem.dto.response.RoundCriterionDetailResponse;
 import org.springframework.data.domain.Pageable;
 
 public interface RoundCriterionService {
 
-  PageResponse<RoundCriterionResponse> getRoundCriteria(Integer roundId, Pageable pageable);
+  PageResponse<RoundCriterionDetailResponse> getRoundCriteria(Integer roundId, Pageable pageable);
 
-  RoundCriterionResponse getRoundCriterion(Integer roundCriterionId);
+  RoundCriterionDetailResponse getRoundCriterion(Integer roundCriterionId);
 
-  RoundCriterionResponse createRoundCriterion(RoundCriterionRequest request);
+  RoundCriterionDetailResponse createRoundCriterion(RoundCriterionRequest request);
 
-  RoundCriterionResponse updateRoundCriterion(
+  RoundCriterionDetailResponse updateRoundCriterion(
       Integer roundCriterionId, RoundCriterionRequest request);
 
   void deleteRoundCriterion(Integer roundCriterionId);

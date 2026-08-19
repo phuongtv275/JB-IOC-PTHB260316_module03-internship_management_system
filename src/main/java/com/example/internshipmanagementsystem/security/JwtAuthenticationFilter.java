@@ -21,6 +21,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
   static final String JWT_ERROR_ATTRIBUTE = "jwtError";
+  static final String ACCOUNT_DISABLED_ATTRIBUTE = "accountDisabled";
   private static final String BEARER_PREFIX = "Bearer ";
 
   private final JwtService jwtService;
@@ -49,7 +50,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
   private void authenticate(HttpServletRequest request, String username) {
     UserDetails userDetails = userDetailsService.loadUserByUsername(username);
     if (!userDetails.isEnabled()) {
-      request.setAttribute(JWT_ERROR_ATTRIBUTE, Boolean.TRUE);
+      request.setAttribute(ACCOUNT_DISABLED_ATTRIBUTE, Boolean.TRUE);
       return;
     }
     UsernamePasswordAuthenticationToken authentication =

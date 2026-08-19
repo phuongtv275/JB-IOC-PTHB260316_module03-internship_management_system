@@ -85,9 +85,9 @@ public class AssessmentResultServiceImpl implements AssessmentResultService {
     log.info(
         "IMS_EVENT ASSESSMENT_RESULT_CREATED RESULT_ID={} ASSIGNMENT_ID={} ROUND_ID={} CRITERION_ID={}",
         response.resultId(),
-        response.assignmentId(),
-        response.roundId(),
-        response.criterionId());
+        response.assignment().assignmentId(),
+        response.round().id(),
+        response.criterion().id());
     return response;
   }
 

@@ -1,7 +1,8 @@
 package com.example.internshipmanagementsystem.service.impl;
 
 import com.example.internshipmanagementsystem.dto.request.InternshipAssignmentRequest;
-import com.example.internshipmanagementsystem.dto.response.InternshipAssignmentResponse;
+import com.example.internshipmanagementsystem.dto.response.InternshipAssignmentDetailResponse;
+import com.example.internshipmanagementsystem.dto.response.InternshipAssignmentSummaryResponse;
 import com.example.internshipmanagementsystem.dto.response.PageResponse;
 import com.example.internshipmanagementsystem.entity.AssignmentStatus;
 import com.example.internshipmanagementsystem.entity.InternshipAssignment;
@@ -41,7 +42,7 @@ public class InternshipAssignmentServiceImpl implements InternshipAssignmentServ
   private final InternshipAssignmentMapper internshipAssignmentMapper;
 
   @Override
-  public PageResponse<InternshipAssignmentResponse> getAssignments(
+  public PageResponse<InternshipAssignmentSummaryResponse> getAssignments(
       String actorUsername, Pageable pageable) {
     User actor = findUser(actorUsername);
     Page<InternshipAssignment> assignments =
@@ -52,19 +53,20 @@ public class InternshipAssignmentServiceImpl implements InternshipAssignmentServ
           case STUDENT ->
               internshipAssignmentRepository.findByStudentUserUsername(actorUsername, pageable);
         };
-    return PageResponse.from(assignments.map(internshipAssignmentMapper::toResponse));
+    return PageResponse.from(assignments.map(internshipAssignmentMapper::toSummaryResponse));
   }
 
   @Override
-  public InternshipAssignmentResponse getAssignment(Integer assignmentId, String actorUsername) {
+  public InternshipAssignmentDetailResponse getAssignment(
+      Integer assignmentId, String actorUsername) {
     InternshipAssignment assignment = findAssignment(assignmentId);
     assertCanAccess(assignment, findUser(actorUsername));
-    return internshipAssignmentMapper.toResponse(assignment);
+    return internshipAssignmentMapper.toDetailResponse(assignment);
   }
 
   @Override
   @Transactional
-  public InternshipAssignmentResponse createAssignment(InternshipAssignmentRequest request) {
+  public InternshipAssignmentDetailResponse createAssignment(InternshipAssignmentRequest request) {
     if (internshipAssignmentRepository.existsByStudentStudentIdAndPhasePhaseId(
         request.studentId(), request.phaseId())) {
       throw new DuplicateResourceException("Student already has an assignment for this phase");
@@ -74,23 +76,25 @@ public class InternshipAssignmentServiceImpl implements InternshipAssignmentServ
             findStudent(request.studentId()),
             findMentor(request.mentorId()),
             findPhase(request.phaseId()));
-    InternshipAssignmentResponse response =
-        internshipAssignmentMapper.toResponse(internshipAssignmentRepository.save(assignment));
+    InternshipAssignmentDetailResponse response =
+        internshipAssignmentMapper.toDetailResponse(
+            internshipAssignmentRepository.save(assignment));
     log.info(
         "IMS_EVENT ASSIGNMENT_CREATED ASSIGNMENT_ID={} STUDENT_ID={} MENTOR_ID={} PHASE_ID={}",
         response.assignmentId(),
-        response.studentId(),
-        response.mentorId(),
-        response.phaseId());
+        response.student().id(),
+        response.mentor().id(),
+        response.phase().id());
     return response;
   }
 
   @Override
   @Transactional
-  public InternshipAssignmentResponse updateStatus(Integer assignmentId, AssignmentStatus status) {
+  public InternshipAssignmentDetailResponse updateStatus(
+      Integer assignmentId, AssignmentStatus status) {
     InternshipAssignment assignment = findAssignment(assignmentId);
     assignment.changeStatus(status);
-    return internshipAssignmentMapper.toResponse(assignment);
+    return internshipAssignmentMapper.toDetailResponse(assignment);
   }
 
   private InternshipAssignment findAssignment(Integer assignmentId) {
