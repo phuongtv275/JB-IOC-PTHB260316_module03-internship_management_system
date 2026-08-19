@@ -31,7 +31,7 @@ public class EvaluationCriterionController {
   @GetMapping
   @PreAuthorize("hasAnyRole('ADMIN', 'MENTOR', 'STUDENT')")
   public ResponseEntity<ApiResponse<PageResponse<EvaluationCriterionResponse>>> getCriteria(
-      @PageableDefault(size = 5) Pageable pageable) {
+      @PageableDefault(size = 5, sort = "criterionId") Pageable pageable) {
     return ResponseEntity.ok(
         ApiResponse.success(
             200,

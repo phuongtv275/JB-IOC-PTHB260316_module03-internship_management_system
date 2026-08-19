@@ -33,7 +33,7 @@ public class AssessmentResultController {
   @PreAuthorize("hasAnyRole('ADMIN', 'MENTOR', 'STUDENT')")
   public ResponseEntity<ApiResponse<PageResponse<AssessmentResultResponse>>> getResults(
       @AuthenticationPrincipal UserDetails userDetails,
-      @PageableDefault(size = 5) Pageable pageable) {
+      @PageableDefault(size = 5, sort = "resultId") Pageable pageable) {
     return ResponseEntity.ok(
         ApiResponse.success(
             200,

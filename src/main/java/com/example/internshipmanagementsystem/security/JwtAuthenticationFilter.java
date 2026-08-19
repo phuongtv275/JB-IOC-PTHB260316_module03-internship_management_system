@@ -48,6 +48,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
   private void authenticate(HttpServletRequest request, String username) {
     UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+    if (!userDetails.isEnabled()) {
+      request.setAttribute(JWT_ERROR_ATTRIBUTE, Boolean.TRUE);
+      return;
+    }
     UsernamePasswordAuthenticationToken authentication =
         UsernamePasswordAuthenticationToken.authenticated(
             userDetails, null, userDetails.getAuthorities());

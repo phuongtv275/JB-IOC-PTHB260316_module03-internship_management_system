@@ -33,7 +33,7 @@ public class RoundCriterionController {
   @PreAuthorize("hasAnyRole('ADMIN', 'MENTOR', 'STUDENT')")
   public ResponseEntity<ApiResponse<PageResponse<RoundCriterionResponse>>> getRoundCriteria(
       @RequestParam(name = "round_id", required = false) Integer roundId,
-      @PageableDefault(size = 5) Pageable pageable) {
+      @PageableDefault(size = 5, sort = "roundCriterionId") Pageable pageable) {
     return ResponseEntity.ok(
         ApiResponse.success(
             200,

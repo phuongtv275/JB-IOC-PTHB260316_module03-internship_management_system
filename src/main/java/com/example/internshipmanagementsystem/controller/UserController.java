@@ -38,7 +38,8 @@ public class UserController {
 
   @GetMapping
   public ResponseEntity<ApiResponse<PageResponse<UserResponse>>> getUsers(
-      @RequestParam(required = false) Role role, @PageableDefault(size = 5) Pageable pageable) {
+      @RequestParam(required = false) Role role,
+      @PageableDefault(size = 5, sort = "userId") Pageable pageable) {
     return ResponseEntity.ok(
         ApiResponse.success(200, "Users retrieved", userService.getUsers(role, pageable)));
   }

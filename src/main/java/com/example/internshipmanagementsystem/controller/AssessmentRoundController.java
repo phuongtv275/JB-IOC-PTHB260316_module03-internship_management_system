@@ -33,7 +33,7 @@ public class AssessmentRoundController {
   @PreAuthorize("hasAnyRole('ADMIN', 'MENTOR', 'STUDENT')")
   public ResponseEntity<ApiResponse<PageResponse<AssessmentRoundResponse>>> getRounds(
       @RequestParam(name = "phase_id", required = false) Integer phaseId,
-      @PageableDefault(size = 5) Pageable pageable) {
+      @PageableDefault(size = 5, sort = "roundId") Pageable pageable) {
     return ResponseEntity.ok(
         ApiResponse.success(
             200,

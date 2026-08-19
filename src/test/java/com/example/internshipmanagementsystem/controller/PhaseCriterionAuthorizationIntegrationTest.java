@@ -8,6 +8,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.example.internshipmanagementsystem.entity.Role;
 import com.example.internshipmanagementsystem.entity.User;
+import com.example.internshipmanagementsystem.repository.MentorRepository;
+import com.example.internshipmanagementsystem.repository.StudentRepository;
 import com.example.internshipmanagementsystem.repository.UserRepository;
 import com.example.internshipmanagementsystem.security.JwtService;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,11 +27,15 @@ class PhaseCriterionAuthorizationIntegrationTest {
 
   @Autowired private MockMvc mockMvc;
   @Autowired private UserRepository userRepository;
+  @Autowired private StudentRepository studentRepository;
+  @Autowired private MentorRepository mentorRepository;
 
   @MockitoBean private JwtService jwtService;
 
   @BeforeEach
   void setUp() {
+    studentRepository.deleteAll();
+    mentorRepository.deleteAll();
     userRepository.deleteAll();
     when(jwtService.extractUsername(anyString()))
         .thenAnswer(invocation -> invocation.getArgument(0));
